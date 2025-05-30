@@ -1,20 +1,22 @@
 [versions]
 agp = "8.10.1"
+constraintlayout = "2.2.1"
 converterGson = "2.4.0"
 dotsloader = "1.4"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-appcompat = "1.6.1"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
 legacySupportV4 = "1.0.0"
 lifecycleExtensions = "2.2.0"
-material = "1.10.0"
+material = "1.12.0"
 mpandroidchart = "v3.1.0"
 navigationFragment = "2.9.0"
 retrofit = "2.11.0"
 volley = "1.2.1"
 
 [libraries]
+constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 dotsloader = { module = "com.agrawalsuneet.androidlibs:dotsloader", version.ref = "dotsloader" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
