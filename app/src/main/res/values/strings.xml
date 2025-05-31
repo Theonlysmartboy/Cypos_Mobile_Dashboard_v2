@@ -185,4 +185,5 @@
     <string name="back">Back</string>
     <string name="monthly_sales_customer_wise">Monthly Sales Customer Wise</string>
     <string name="customer_credit_details">Customer Credit Details</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

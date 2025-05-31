@@ -31,6 +31,7 @@
     <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:textColor">@color/red</item>
     </style>
+
     <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
         <item name="android:background">@color/colorAccent</item>
         <item name="tabTextAppearance">@style/CustomTabText</item>
