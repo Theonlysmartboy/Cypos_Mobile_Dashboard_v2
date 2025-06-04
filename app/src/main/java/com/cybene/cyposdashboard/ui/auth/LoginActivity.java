@@ -19,12 +19,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.ui.MenuActivity;
 import com.cybene.cyposdashboard.utils.AppConfig;
 import com.cybene.cyposdashboard.utils.AppController;
+import com.cybene.cyposdashboard.utils.NetworkUtils;
 import com.cybene.cyposdashboard.utils.TrailingDotsLoader;
 import com.cybene.cyposdashboard.utils.ValidateInput;
 import com.cybene.cyposdashboard.utils.db.Db;
@@ -118,6 +122,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Tag used to cancel the request
         String tag_string_req = "req_login";
         //showDialog();
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            NetworkUtils.showNoInternetDialog(this, true); // true = allow exit
+            return; // Stop further execution
+        }
         StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_LOGIN, response -> {
             Log.d(TAG, "Login Response: " + response);
             hideDialog();
@@ -160,6 +168,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
         }, error -> {
+            if (error.networkResponse == null) {
+                Log.e("VolleyError", "No network response (timeout, no internet, etc.)");
+                Toast.makeText(this, "Network error: Check your connection", Toast.LENGTH_SHORT).show();
+                hideDialog();
+                login.setEnabled(true);
+            }
             Log.e(TAG, "Login Error: " +error + ">>" + error.networkResponse.statusCode
                     + ">>" + Arrays.toString(error.networkResponse.data)
                     + ">>" + error.getCause()
@@ -180,8 +194,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         };
 
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        strReq.setRetryPolicy(new DefaultRetryPolicy(
+                1000*10,
+                /*DefaultRetryPolicy.DEFAULT_MAX_RETRIES*/ 3,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue loginRequestQue = Volley.newRequestQueue(this);
+        loginRequestQue.add(strReq);
     }
     private boolean validateInput(String emailVal, String passwordVal) {
         ValidateInput validateInput = new ValidateInput();

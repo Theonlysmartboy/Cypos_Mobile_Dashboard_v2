@@ -1,9 +1,13 @@
 package com.cybene.cyposdashboard.ui.auth;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,12 +26,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.utils.AppConfig;
-import com.cybene.cyposdashboard.utils.AppController;
 import com.cybene.cyposdashboard.utils.KeyGenerator;
+import com.cybene.cyposdashboard.utils.NetworkUtils;
 import com.cybene.cyposdashboard.utils.TrailingDotsLoader;
 import com.cybene.cyposdashboard.utils.ValidateInput;
 
@@ -181,6 +188,23 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
     }
 
     private void createUser(final String cnameVal, final String emailVal, final String passwordVal, final String keyVal) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            NetworkUtils.showNoInternetDialog(this, true); // true = allow exit
+            return; // Stop further execution
+        }
+        // Optional: Real-time network listener
+        ConnectivityManager.NetworkCallback callback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                // Network is back
+            }
+
+            @Override
+            public void onLost(@NonNull Network network) {
+                // Network lost
+            }
+        };
+        NetworkUtils.registerNetworkCallback(this, callback);
         // Tag used to cancel the request
         String tag_string_req = "req_register";
         StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_REGISTER, response -> {
@@ -223,7 +247,12 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
             }
         };
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        strReq.setRetryPolicy(new DefaultRetryPolicy(
+                1000*10,
+                /*DefaultRetryPolicy.DEFAULT_MAX_RETRIES*/ 3,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue registerRequestQue = Volley.newRequestQueue(this);
+        registerRequestQue.add(strReq);
     }
 
     private void showLogin(){

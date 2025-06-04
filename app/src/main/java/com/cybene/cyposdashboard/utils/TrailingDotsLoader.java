@@ -19,8 +19,8 @@ public class TrailingDotsLoader extends View {
     private int dotCount = 8;
     private float radius;
     private int dotRadius = 10;
-    private int primaryColor = Color.parseColor("#4CAF50");
-    private int secondaryColor = Color.parseColor("#8BC34A");
+    private int primaryColor = Color.parseColor("#336699");
+    private int secondaryColor = Color.parseColor("#003366");
     private int animationDuration = 1000;
     private ValueAnimator animator;
     public TrailingDotsLoader(Context context) {

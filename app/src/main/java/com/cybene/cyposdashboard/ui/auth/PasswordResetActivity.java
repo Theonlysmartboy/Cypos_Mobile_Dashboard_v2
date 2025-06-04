@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,6 +25,7 @@ import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.ui.MenuActivity;
 import com.cybene.cyposdashboard.utils.AppConfig;
+import com.cybene.cyposdashboard.utils.NetworkUtils;
 import com.cybene.cyposdashboard.utils.ValidateInput;
 import com.cybene.cyposdashboard.utils.db.Db;
 import com.cybene.cyposdashboard.utils.db.SharedPrefs;
@@ -127,8 +129,12 @@ public class PasswordResetActivity extends AppCompatActivity implements TextWatc
         return valid;
     }
     private void update( final String clientEmail, final String fullname, final String password) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            NetworkUtils.showNoInternetDialog(this, true); // true = allow exit
+            return; // Stop further execution
+        }
         // Tag used to cancel the request
-        pDialog.setMessage("Registering ...");
+        pDialog.setMessage("Resetting ...");
         showDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_PASSWORD_RESET, new Response.Listener<String>() {
 
@@ -157,18 +163,14 @@ public class PasswordResetActivity extends AppCompatActivity implements TextWatc
                         Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "onResponse: ", e );
                 }
 
             }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Reset Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(), " An error has occurred during data update "+error.getMessage(), Toast.LENGTH_LONG).show();
-                hideDialog();
-            }
+        }, error -> {
+            Log.e(TAG, "Reset Error: " + error.getMessage());
+            Toast.makeText(getApplicationContext(), " An error has occurred during data update "+error.getMessage(), Toast.LENGTH_LONG).show();
+            hideDialog();
         }) {
 
             @Override
@@ -182,8 +184,12 @@ public class PasswordResetActivity extends AppCompatActivity implements TextWatc
             }
         };
         // Adding request to request queue
-        RequestQueue resetRequestQue = Volley.newRequestQueue(this);
-        resetRequestQue.add(strReq);
+        strReq.setRetryPolicy(new DefaultRetryPolicy(
+                1000*10,
+                /*DefaultRetryPolicy.DEFAULT_MAX_RETRIES*/ 3,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue pwdResetRequestQue = Volley.newRequestQueue(this);
+        pwdResetRequestQue.add(strReq);
     }
     private void showDialog() {
         if (!pDialog.isShowing())
