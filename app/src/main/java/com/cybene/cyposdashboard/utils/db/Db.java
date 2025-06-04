@@ -50,10 +50,11 @@ public class Db extends SQLiteOpenHelper {
         added= result != -1;
         return added;
     }
-    public boolean storeUser( String name, String email){
+    public boolean storeUser( String uid, String name, String email){
         boolean added;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
+        contentValue.put("id",uid);
         contentValue.put("name",name);
         contentValue.put("email",email);
         long result = db.insert("tbl_users",null,contentValue);
@@ -77,8 +78,7 @@ public class Db extends SQLiteOpenHelper {
     }
     public Cursor getUser(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * from tbl_users",null);
-        return res;
+        return db.rawQuery("SELECT * from tbl_users",null);
     }
     public void deleteConfig(){
         SQLiteDatabase db = this.getWritableDatabase();

@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.cybene.cyposdashboard.ui.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:name="com.cybene.cyposdashboard.ui.sales.SalesFragment"
+        android:label="@string/sales"
+        tools:layout="@layout/fragment_sales" />
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.cybene.cyposdashboard.ui.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:name="com.cybene.cyposdashboard.ui.purchase.PurchaseFragment"
+        android:label="@string/purchase"
+        tools:layout="@layout/fragment_purchase" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.cybene.cyposdashboard.ui.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:name="com.cybene.cyposdashboard.ui.inventory.InventoryFragment"
+        android:label="@string/inventory"
+        tools:layout="@layout/fragment_inventory" />
 </navigation>

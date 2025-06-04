@@ -37,7 +37,7 @@ public abstract class SimpleFragment extends Fragment {
     protected Context context;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
     }

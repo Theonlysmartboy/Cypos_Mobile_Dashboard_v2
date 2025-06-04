@@ -1,15 +1,12 @@
 package com.cybene.cyposdashboard.ui.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
-import android.graphics.Rect;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.SharedMemory;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.text.method.TransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -22,15 +19,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.agrawalsuneet.dotsloader.loaders.TrailingCircularDotsLoader;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.ui.MenuActivity;
 import com.cybene.cyposdashboard.utils.AppConfig;
 import com.cybene.cyposdashboard.utils.AppController;
+import com.cybene.cyposdashboard.utils.TrailingDotsLoader;
 import com.cybene.cyposdashboard.utils.ValidateInput;
 import com.cybene.cyposdashboard.utils.db.Db;
 import com.cybene.cyposdashboard.utils.db.SharedPrefs;
@@ -38,11 +33,10 @@ import com.cybene.cyposdashboard.utils.db.SharedPrefs;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     TextView register,reset;
@@ -52,9 +46,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     CheckBox remember;
     ImageView view;
     androidx.constraintlayout.widget.ConstraintLayout container;
-    TrailingCircularDotsLoader trailingCircularDotsLoader;
     private SharedPrefs session;
     private static final String TAG = LoginActivity.class.getSimpleName();
+    TrailingDotsLoader trailingCircularDotsLoader;
     private Db myDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
         // hide the action bar
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         initializeComponents();
         setControlActionListeners();
     }
@@ -80,10 +74,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         view = findViewById(R.id.view);
         myDb = new Db(this);
         session = new SharedPrefs(getApplicationContext());
-        trailingCircularDotsLoader = new TrailingCircularDotsLoader(
-                this, 24, ContextCompat.getColor(this, android.R.color.holo_blue_dark), 100, 5);
-        trailingCircularDotsLoader.setAnimDuration(1200);
-        trailingCircularDotsLoader.setAnimDelay(200);
+        trailingCircularDotsLoader = new TrailingDotsLoader(this);
+        trailingCircularDotsLoader.setPrimaryColor(Color.parseColor(AppConfig.loaderPrimaryColor));
+        trailingCircularDotsLoader.setSecondaryColor(Color.parseColor(AppConfig.loaderSecondaryColor));
+        trailingCircularDotsLoader.setDotCount(AppConfig.loaderDotsCount);
+        trailingCircularDotsLoader.setDotRadius(AppConfig.loaderDotsRadius);
+        trailingCircularDotsLoader.setAnimationDuration(AppConfig.loaderAnimationDuration);
     }
     private void setControlActionListeners() {
         register.setOnClickListener(this);
@@ -94,92 +90,83 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
-            case R.id.sign_up:
-                loadSignUp();
-                break;
-            case R.id.pwdReset:
-                loadPwdRecovery();
-                break;
-            case R.id.btnLogin:
-                showDialog();
-                String emailVal = email.getText().toString().trim();
-                String passwordVal = password.getText().toString().trim();
-                if(validateInput(emailVal, passwordVal)){
-                    auth(emailVal,passwordVal);
-                }
-                break;
-            case R.id.view:
-                if(password.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
-                    ((ImageView)(view)).setImageResource(R.drawable.ic_visibility_off);
-                    //Show Password
-                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                }
-                else{
-                    ((ImageView)(view)).setImageResource(R.drawable.ic_visibility);
-                    //Hide Password
-                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }
-                break;
+        if(view.getId() == R.id.sign_up){
+            loadSignUp();
+        } else if (view.getId() == R.id.pwdReset) {
+            loadPwdRecovery();
+        } else if (view.getId() == R.id.btnLogin) {
+            showDialog();
+            String emailVal = email.getText().toString().trim();
+            String passwordVal = password.getText().toString().trim();
+            if(validateInput(emailVal, passwordVal)){
+                auth(emailVal,passwordVal);
+            }
+        }else {
+            if(password.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+                ((ImageView)(view)).setImageResource(R.drawable.ic_visibility_off);
+                //Show Password
+                password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            }
+            else{
+                ((ImageView)(view)).setImageResource(R.drawable.ic_visibility);
+                //Hide Password
+                password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
         }
     }
     private void auth(final String emailVal, final String passwordVal) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
         //showDialog();
-        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_LOGIN, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_LOGIN, response -> {
+            Log.d(TAG, "Login Response: " + response);
+            hideDialog();
+            try {
+                JSONObject jObj = new JSONObject(response);
+                boolean error = jObj.getBoolean("error");
+                // Check for error node in json
+                if (!error) {
+                    // user successfully logged in
+                    //check if remember is checked
+                    if(remember.isChecked()){
+                        // Create login session
+                        session.saveString("isLoggedIn", "true");
+                    }
 
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Login Response: " + response);
-                hideDialog();
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
-                    // Check for error node in json
-                    if (!error) {
-                        // user successfully logged in
-                        //check if remember is checked
-                        if(remember.isChecked()){
-                            // Create login session
-                            session.saveString("isLoggedIn", "true");
-                        }
-
-                        // Now store the user in SQLite
-                        String uid = jObj.getString("uid");
-                        JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("cname");
-                        String email = user.getString("email");
-                        myDb.storeUser(name,email);
-                        Toast.makeText(getApplicationContext(),"Welcome " + name+" email "+email,Toast.LENGTH_LONG).show();
-                        // Launch main activity
-                        loadMain();
-                    } else {
-                        // Error in login. Get the error message
-                        String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(),"Login Error "+errorMsg, Toast.LENGTH_LONG).show();
+                    // Now store the user in SQLite
+                    String uid = jObj.getString("uid");
+                    JSONObject user = jObj.getJSONObject("user");
+                    String name = user.getString("cname");
+                    String email = user.getString("email");
+                    if(myDb.storeUser(uid, name,email)){
+                    Toast.makeText(getApplicationContext(),"Welcome " + name+" email "+email,Toast.LENGTH_LONG).show();
+                    // Launch main activity
+                    loadMain();}
+                    else{
+                        Toast.makeText(getApplicationContext(),"Unable To write to local database ", Toast.LENGTH_LONG).show();
                         login.setEnabled(true);
                     }
-                } catch (JSONException e) {
-                    // JSON error
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    // Error in login. Get the error message
+                    String errorMsg = jObj.getString("error_msg");
+                    Toast.makeText(getApplicationContext(),"Login Error "+errorMsg, Toast.LENGTH_LONG).show();
                     login.setEnabled(true);
                 }
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Login Error: " +error + ">>" + error.networkResponse.statusCode
-                        + ">>" + error.networkResponse.data
-                        + ">>" + error.getCause()
-                        + ">>" + error.getMessage());
-                Toast.makeText(getApplicationContext(), "Error Loging In please try again "+error.getMessage(), Toast.LENGTH_LONG).show();
-                hideDialog();
+            } catch (JSONException e) {
+                // JSON error
+                Log.e(TAG, "auth: ", e );
+                Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 login.setEnabled(true);
             }
+
+        }, error -> {
+            Log.e(TAG, "Login Error: " +error + ">>" + error.networkResponse.statusCode
+                    + ">>" + Arrays.toString(error.networkResponse.data)
+                    + ">>" + error.getCause()
+                    + ">>" + error.getMessage());
+            Toast.makeText(getApplicationContext(), "Error Logging In please try again "+error.getMessage(), Toast.LENGTH_LONG).show();
+            hideDialog();
+            login.setEnabled(true);
         }) {
 
             @Override

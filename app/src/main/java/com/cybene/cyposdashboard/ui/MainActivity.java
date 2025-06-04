@@ -4,10 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.ui.auth.LoginActivity;
@@ -24,16 +22,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         url = findViewById(R.id.txtUrl);
         save = findViewById(R.id.submit);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String link = url.getText().toString().trim();
-                db = new Db(getApplication());
-                db.storeConfig(link);
-                Intent login = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(login);
-                finish();
-            }
+        save.setOnClickListener(view -> {
+            String link = url.getText().toString().trim();
+            db = new Db(getApplication());
+            db.storeConfig(link);
+            Intent login = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(login);
+            finish();
         });
 
     }

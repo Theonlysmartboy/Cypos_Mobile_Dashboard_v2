@@ -1,13 +1,13 @@
 package com.cybene.cyposdashboard.ui.sales;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -15,17 +15,16 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.agrawalsuneet.dotsloader.loaders.RotatingCircularDotsLoader;
 import com.android.volley.Request;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.utils.ApiClient;
 import com.cybene.cyposdashboard.utils.AppConfig;
 import com.cybene.cyposdashboard.utils.AppController;
+import com.cybene.cyposdashboard.utils.TrailingDotsLoader;
 import com.cybene.cyposdashboard.utils.data.sales.CustomerWiseSalesGrid;
 import com.cybene.cyposdashboard.utils.interfaces.sales.CustomerWiseSalesGridInterface;
 
@@ -66,97 +65,75 @@ public class CustomerWiseSalesDataGridFragment extends Fragment {
         getData();
         from = v.findViewById(R.id.date_from);
         to = v.findViewById(R.id.date_to);
-        from.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
-                picker = new DatePickerDialog(requireActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        from.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
-                    }
-                }, year, month, day);
-                picker.getDatePicker().setLayoutMode(1);
-                picker.show();
-            }
+        from.setOnClickListener(view -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            // date picker dialog
+            picker = new DatePickerDialog(requireActivity(), (view1, year1, monthOfYear, dayOfMonth) -> from.setText(year1 + "-" + (monthOfYear+1) + "-" + dayOfMonth), year, month, day);
+            picker.getDatePicker().setLayoutMode(1);
+            picker.show();
         });
         to = v.findViewById(R.id.date_to);
-        to.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
-                picker = new DatePickerDialog(requireActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        to.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
-                    }
-                }, year, month, day);
-                picker.getDatePicker().setLayoutMode(1);
-                picker.show();
-            }
+        to.setOnClickListener(view -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            // date picker dialog
+            picker = new DatePickerDialog(requireActivity(), (view2, year2, monthOfYear, dayOfMonth) -> to.setText(year2 + "-" + (monthOfYear+1) + "-" + dayOfMonth), year, month, day);
+            picker.getDatePicker().setLayoutMode(1);
+            picker.show();
         });
         show = v.findViewById(R.id.show);
-        show.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fromVal = from.getText().toString().trim();
-                toVal = to.getText().toString().trim();
-                getRangeBasedData(fromVal,toVal);
+        show.setOnClickListener(view -> {
+            fromVal = from.getText().toString().trim();
+            toVal = to.getText().toString().trim();
+            getRangeBasedData(fromVal,toVal);
 
-            }
         });
         return v;
     }
 
     private void getRangeBasedData(final String fromVal, final String toVal) {
-        final String TAG = getActivity().getClass().getSimpleName();
+        final String TAG = requireActivity().getClass().getSimpleName();
         String tag_string_req = "req_tag";
-        final RotatingCircularDotsLoader loader = new RotatingCircularDotsLoader(getActivity(),
-                20, 60, ContextCompat.getColor(getActivity(), R.color.design_default_color_primary));
-        loader.setAnimDuration(3000);
+        final TrailingDotsLoader loader = new TrailingDotsLoader(getActivity());
+        loader.setPrimaryColor(Color.parseColor(AppConfig.loaderPrimaryColor));
+        loader.setSecondaryColor(Color.parseColor(AppConfig.loaderSecondaryColor));
+        loader.setDotCount(AppConfig.loaderDotsCount);
+        loader.setDotRadius(AppConfig.loaderDotsRadius);
+        loader.setAnimationDuration(AppConfig.loaderAnimationDuration);
         parentContainer.addView(loader);
-        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_CUSTOMER_WISE_SALE, new com.android.volley.Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Response: " + response);
-                removeRows();
-                try {
-                    idNo = 1;
-                    JSONObject jsonObject;
-                    JSONObject drinkObject = new JSONObject(response);
-                    JSONArray jsonArray = drinkObject.getJSONArray("data");
-                    for(int i=0; i<jsonArray.length();i++){
-                        jsonObject = jsonArray.getJSONObject(i);
-                        tableRow = LayoutInflater.from(getActivity()).inflate(R.layout.table_item, null, false);
-                        //table components
-                        id = tableRow.findViewById(R.id.idNo);
-                        month = tableRow.findViewById(R.id.month);
-                        sales = tableRow.findViewById(R.id.sale);
-                        id.setText(String.valueOf(idNo++));
-                        month.setText(jsonObject.getString("customer"));
-                        sales.setText(jsonObject.getString("sales"));
-                        items.addView(tableRow);
-                    }
-                    parentContainer.removeView(loader);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_CUSTOMER_WISE_SALE, response -> {
+            Log.d(TAG, "Response: " + response);
+            removeRows();
+            try {
+                idNo = 1;
+                JSONObject jsonObject;
+                JSONObject drinkObject = new JSONObject(response);
+                JSONArray jsonArray = drinkObject.getJSONArray("data");
+                for(int i=0; i<jsonArray.length();i++){
+                    jsonObject = jsonArray.getJSONObject(i);
+                    tableRow = LayoutInflater.from(getActivity()).inflate(R.layout.table_item, null, false);
+                    //table components
+                    id = tableRow.findViewById(R.id.idNo);
+                    month = tableRow.findViewById(R.id.month);
+                    sales = tableRow.findViewById(R.id.sale);
+                    id.setText(String.valueOf(idNo++));
+                    month.setText(jsonObject.getString("customer"));
+                    sales.setText(jsonObject.getString("sales"));
+                    items.addView(tableRow);
                 }
-            }
-        }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Request Error: " + error.getMessage());
-                Toast.makeText(getActivity(), " An error has occurred "+error.getMessage(), Toast.LENGTH_LONG).show();
                 parentContainer.removeView(loader);
+            } catch (JSONException e) {
+                Log.e(TAG, "getRangeBasedData: ", e );
             }
+        }, error -> {
+            Log.e(TAG, "Request Error: " + error.getMessage());
+            Toast.makeText(getActivity(), " An error has occurred "+error.getMessage(), Toast.LENGTH_LONG).show();
+            parentContainer.removeView(loader);
         }) {
             @Override
             protected Map<String, String> getParams() {
@@ -173,7 +150,7 @@ public class CustomerWiseSalesDataGridFragment extends Fragment {
 
     private void getData() {
         Call<List<CustomerWiseSalesGrid>> call = ApiClient.getApiClient().create(CustomerWiseSalesGridInterface.class).getSalesInfo();
-        call.enqueue(new Callback<List<CustomerWiseSalesGrid>>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NotNull Call<List<CustomerWiseSalesGrid>> call, @NotNull Response<List<CustomerWiseSalesGrid>> response) {
                 //check if the response body is null
@@ -195,25 +172,25 @@ public class CustomerWiseSalesDataGridFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<CustomerWiseSalesGrid>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<CustomerWiseSalesGrid>> call, @NonNull Throwable t) {
 
             }
         });
     }
 
     private void setBackground() {
-        int numrows = items.getChildCount();
-        for (int i=0; i<numrows;i++) {
+        int numRows = items.getChildCount();
+        for (int i=0; i<numRows;i++) {
             if(i%2==1){
-                items.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                items.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.colorAccent, requireActivity().getTheme()));
             }else{
-                items.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.white));
+                items.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.white, requireActivity().getTheme()));
             }
         }
     }
     public void removeRows(){
-        int numrows = items.getChildCount();
-        for(int i = 1; i<numrows; i++) {
+        int numRows = items.getChildCount();
+        for(int i = 1; i<numRows; i++) {
             View child = items.getChildAt(i);
             if (child instanceof TableRow) ((ViewGroup) child).removeAllViews();
         }

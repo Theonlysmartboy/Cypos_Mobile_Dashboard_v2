@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.cybene.cyposdashboard.R;
@@ -95,7 +96,7 @@ public class DailySalesFragment extends Fragment implements OnChartGestureListen
 
     private void getDailySales() {
         Call<List<DailySales>> call = ApiClient.getApiClient().create(DailySalesInterface.class).getSalesInfo();
-        call.enqueue(new Callback<List<DailySales>>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NotNull Call<List<DailySales>> call, @NotNull Response<List<DailySales>> response) {
                 //check if the response body is null
@@ -127,7 +128,7 @@ public class DailySalesFragment extends Fragment implements OnChartGestureListen
             }
 
             @Override
-            public void onFailure(Call<List<DailySales>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<DailySales>> call, @NonNull Throwable t) {
 
             }
         });

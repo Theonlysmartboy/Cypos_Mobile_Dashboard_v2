@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.cybene.cyposdashboard.R;
@@ -38,9 +39,6 @@ public class MonthlyPurchaseChartFragment extends Fragment implements OnChartGes
 
     public MonthlyPurchaseChartFragment() {
         // Required empty public constructor
-    }
-    public static MonthlyPurchaseChartFragment newInstance(){
-        return new MonthlyPurchaseChartFragment();
     }
 
     @Override
@@ -94,7 +92,7 @@ public class MonthlyPurchaseChartFragment extends Fragment implements OnChartGes
 
     private void getSales() {
         Call<List<MonthlyPurchase>> call = ApiClient.getApiClient().create(MonthlyPurchaseInterface.class).getSalesInfo();
-        call.enqueue(new Callback<List<MonthlyPurchase>>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NotNull Call<List<MonthlyPurchase>> call, @NotNull Response<List<MonthlyPurchase>> response) {
                 //check if the response body is null
@@ -127,7 +125,7 @@ public class MonthlyPurchaseChartFragment extends Fragment implements OnChartGes
             }
 
             @Override
-            public void onFailure(@NotNull Call<List<MonthlyPurchase>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<MonthlyPurchase>> call, @NonNull Throwable t) {
 
             }
         });

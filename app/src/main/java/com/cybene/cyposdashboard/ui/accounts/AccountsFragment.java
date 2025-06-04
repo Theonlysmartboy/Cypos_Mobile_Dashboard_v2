@@ -33,7 +33,7 @@ public class AccountsFragment extends Fragment {
     }
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        AccountsPagerAdapter pagerAdapter = new AccountsPagerAdapter(getActivity().getSupportFragmentManager());
+        AccountsPagerAdapter pagerAdapter = new AccountsPagerAdapter(requireActivity().getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }

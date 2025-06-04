@@ -2,6 +2,7 @@ package com.cybene.cyposdashboard.ui.sales;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -42,7 +43,7 @@ public class DailySalesDataGridFragment extends Fragment {
     }
     private void getData() {
         Call<List<DailySalesGrid>> call = ApiClient.getApiClient().create(DailySalesGridInterface.class).getSalesInfo();
-        call.enqueue(new Callback<List<DailySalesGrid>>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NotNull Call<List<DailySalesGrid>> call, @NotNull Response<List<DailySalesGrid>> response) {
                 //check if the response body is null
@@ -64,7 +65,7 @@ public class DailySalesDataGridFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<DailySalesGrid>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<DailySalesGrid>> call, @NonNull Throwable t) {
 
             }
         });

@@ -1,10 +1,9 @@
 package com.cybene.cyposdashboard.ui.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
-import android.media.Image;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,20 +19,16 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.agrawalsuneet.dotsloader.loaders.TrailingCircularDotsLoader;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.cybene.cyposdashboard.R;
-import com.cybene.cyposdashboard.ui.MenuActivity;
 import com.cybene.cyposdashboard.utils.AppConfig;
 import com.cybene.cyposdashboard.utils.AppController;
 import com.cybene.cyposdashboard.utils.KeyGenerator;
+import com.cybene.cyposdashboard.utils.TrailingDotsLoader;
 import com.cybene.cyposdashboard.utils.ValidateInput;
 
 import org.json.JSONException;
@@ -41,6 +36,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity implements TextWatcher, View.OnClickListener {
     private AutoCompleteTextView cName,email;
@@ -50,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
     private TextView signIn;
     private String cnameVal, emailVal, passwordVal, keyVal;
     ImageView show, view;
-    TrailingCircularDotsLoader trailingCircularDotsLoader;
+    TrailingDotsLoader trailingCircularDotsLoader;
     LinearLayout container;
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
@@ -63,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
         // hide the action bar
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         initializeComponents();
         setControlActionListeners();
     }
@@ -82,10 +78,12 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
         KeyGenerator keyGenerator = new KeyGenerator();
         String activationKey = KeyGenerator.generateKey(4);
         key.setText(activationKey);
-        trailingCircularDotsLoader = new TrailingCircularDotsLoader(
-                this, 24, ContextCompat.getColor(this, android.R.color.holo_blue_dark), 100, 5);
-        trailingCircularDotsLoader.setAnimDuration(1200);
-        trailingCircularDotsLoader.setAnimDelay(200);
+         trailingCircularDotsLoader = new TrailingDotsLoader(this);
+        trailingCircularDotsLoader.setPrimaryColor(Color.parseColor(AppConfig.loaderPrimaryColor));
+        trailingCircularDotsLoader.setSecondaryColor(Color.parseColor(AppConfig.loaderSecondaryColor));
+        trailingCircularDotsLoader.setDotCount(AppConfig.loaderDotsCount);
+        trailingCircularDotsLoader.setDotRadius(AppConfig.loaderDotsRadius);
+        trailingCircularDotsLoader.setAnimationDuration(AppConfig.loaderAnimationDuration);
     }
     private void setControlActionListeners() {
         cPassword.addTextChangedListener(this);
@@ -117,44 +115,39 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btnRegister:
-                showDialog();
-                cnameVal = cName.getText().toString().trim();
-                emailVal = email.getText().toString().trim();
-                passwordVal = password.getText().toString().trim();
-                keyVal = key.getText().toString().trim();
-                if(valid(cnameVal,emailVal,passwordVal)){
-                    createUser(cnameVal,emailVal,passwordVal,keyVal);
-                }
-                break;
-            case R.id.btnLoginLink:
-                showLogin();
-                break;
-            case R.id.show:
-                if(cPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
-                    ((ImageView)(show)).setImageResource(R.drawable.ic_visibility_off);
-                    //Show Password
-                    cPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                }
-                else{
-                    ((ImageView)(show)).setImageResource(R.drawable.ic_visibility);
-                    //Hide Password
-                    cPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }
-                break;
-            case R.id.view:
-                if(password.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
-                    ((ImageView)(view)).setImageResource(R.drawable.ic_visibility_off);
-                    //Show Password
-                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                }
-                else{
-                    ((ImageView)(view)).setImageResource(R.drawable.ic_visibility);
-                    //Hide Password
-                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }
-                break;
+        if(view.getId() == R.id.btnRegister){
+            showDialog();
+            cnameVal = cName.getText().toString().trim();
+            emailVal = email.getText().toString().trim();
+            passwordVal = password.getText().toString().trim();
+            keyVal = key.getText().toString().trim();
+            if(valid(cnameVal,emailVal,passwordVal)){
+                createUser(cnameVal,emailVal,passwordVal,keyVal);
+            }
+        } else if (view.getId() == R.id.btnLoginLink) {
+            showLogin();
+        } else if (view.getId() == R.id.show) {
+            if(cPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+                show.setImageResource(R.drawable.ic_visibility_off);
+                //Show Password
+                cPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            }
+            else{
+                show.setImageResource(R.drawable.ic_visibility);
+                //Hide Password
+                cPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        } else {
+            if(password.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+                ((ImageView)(view)).setImageResource(R.drawable.ic_visibility_off);
+                //Show Password
+                password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            }
+            else{
+                ((ImageView)(view)).setImageResource(R.drawable.ic_visibility);
+                //Hide Password
+                password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
         }
     }
 
@@ -190,40 +183,32 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
     private void createUser(final String cnameVal, final String emailVal, final String passwordVal, final String keyVal) {
         // Tag used to cancel the request
         String tag_string_req = "req_register";
-        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_REGISTER, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_REGISTER, response -> {
+            Log.d(TAG, "Register Response: " + response);
+            hideDialog();
+            try {
+                JSONObject jObj = new JSONObject(response);
+                boolean error = jObj.getBoolean("error");
+                if (!error) {
+                    // User successfully stored in MySQL
+                    Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
+                    // Launch login activity
+                    showLogin();
+                } else {
 
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Register Response: " + response);
-                hideDialog();
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
-                    if (!error) {
-                        // User successfully stored in MySQL
-                        Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
-                        // Launch login activity
-                        showLogin();
-                    } else {
-
-                        // Error occurred in registration. Get the error
-                        // message
-                        String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    // Error occurred in registration. Get the error
+                    // message
+                    String errorMsg = jObj.getString("error_msg");
+                    Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
                 }
-
+            } catch (JSONException e) {
+                Log.e(TAG, "createUser: ", e );
             }
-        }, new Response.ErrorListener() {
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Registration Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(), " An error has occurred during registration "+error.getMessage(), Toast.LENGTH_LONG).show();
-                hideDialog();
-            }
+        }, error -> {
+            Log.e(TAG, "Registration Error: " + error.getMessage());
+            Toast.makeText(getApplicationContext(), " An error has occurred during registration "+error.getMessage(), Toast.LENGTH_LONG).show();
+            hideDialog();
         }) {
 
             @Override

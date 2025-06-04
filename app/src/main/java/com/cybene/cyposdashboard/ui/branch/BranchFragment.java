@@ -25,7 +25,7 @@ public class BranchFragment extends Fragment {
     }
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        BranchPagerAdapter pagerAdapter = new BranchPagerAdapter(getActivity().getSupportFragmentManager());
+        BranchPagerAdapter pagerAdapter = new BranchPagerAdapter(requireActivity().getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }

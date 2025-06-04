@@ -28,23 +28,20 @@ public class SplashActivity extends AppCompatActivity {
         splash();
     }
     private void splash() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // if User has logged in
-                //Show the Menu
-                if(SharedPrefs.getInstance().getString("isLoggedIn").equalsIgnoreCase("")) {
-                    //User is not yet logged in
-                    // show the login activity
-                    Intent login = new Intent(SplashActivity.this, LoginActivity.class);
-                    startActivity(login);
-                    finish();
-                }
-                else {
-                    Intent home = new Intent(SplashActivity.this, MenuActivity.class);
-                    startActivity(home);
-                    finish();
-                }
+        new Handler().postDelayed(() -> {
+            // if User has logged in
+            //Show the Menu
+            if(SharedPrefs.getInstance().getString("isLoggedIn").equalsIgnoreCase("")) {
+                //User is not yet logged in
+                // show the login activity
+                Intent login = new Intent(SplashActivity.this, LoginActivity.class);
+                startActivity(login);
+                finish();
+            }
+            else {
+                Intent home = new Intent(SplashActivity.this, MenuActivity.class);
+                startActivity(home);
+                finish();
             }
         },5000);
 

@@ -1,9 +1,9 @@
 package com.cybene.cyposdashboard.ui.customer;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -22,16 +21,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.agrawalsuneet.dotsloader.loaders.RotatingCircularDotsLoader;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.utils.AppConfig;
 import com.cybene.cyposdashboard.utils.AppController;
+import com.cybene.cyposdashboard.utils.TrailingDotsLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,8 +49,8 @@ public class CustomerCreditDetailsFragment extends Fragment {
     private JSONArray result;
     String code;
     private TableLayout items;
-    TextView rno,rdate,ccode,acode,amtype,amount,ramount,chqno,chqdate,bankname,remark,isrecrev,
-            isassign,created,createdby,modified,modifiedby,srno,country,balance;
+    TextView rno,rDate,cCode,aCode,amType,amount,rAmount,chqNo,chqDate,bankName,remark,isRecRev,
+            isAssign,created,createdBy,modified,modifiedBy,srNo,country,balance;
     EditText from;
     DatePickerDialog picker;
     Button show;
@@ -85,62 +82,45 @@ public class CustomerCreditDetailsFragment extends Fragment {
         items = v.findViewById(R.id.container);
         parentContainer = v.findViewById(R.id.parentContainer);
         from = v.findViewById(R.id.date_from);
-        from.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
-                picker = new DatePickerDialog(requireActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        from.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
-                    }
-                }, year, month, day);
-                picker.getDatePicker().setLayoutMode(1);
-                picker.show();
-            }
+        from.setOnClickListener(view -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            // date picker dialog
+            picker = new DatePickerDialog(requireActivity(), (view1, year1, monthOfYear, dayOfMonth) -> from.setText(year1 + "-" + (monthOfYear+1) + "-" + dayOfMonth), year, month, day);
+            picker.getDatePicker().setLayoutMode(1);
+            picker.show();
         });
         show = v.findViewById(R.id.show);
-        show.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fromVal = from.getText().toString().trim();
-                removeRows();
-                getData(code,fromVal);
+        show.setOnClickListener(view -> {
+            fromVal = from.getText().toString().trim();
+            removeRows();
+            getData(code,fromVal);
 
-            }
         });
         return v;
     }
     private void getClientData(){
         //Creating a string request
         StringRequest stringRequest = new StringRequest(Request.Method.GET, AppConfig.URL_CLIENTS,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d( TAG,"Client Response " + response);
-                        JSONObject j;
-                        try {
-                            //Parsing the fetched Json String to JSON Object
-                            j = new JSONObject(response);
+                response -> {
+                    Log.d(TAG, "Client Response " + response);
+                    JSONObject j;
+                    try {
+                        //Parsing the fetched Json String to JSON Object
+                        j = new JSONObject(response);
 
-                            //Storing the Array of JSON String to our JSON Array
-                            result = j.getJSONArray("data");
+                        //Storing the Array of JSON String to our JSON Array
+                        result = j.getJSONArray("data");
 
-                            //Calling method getclients to get the clients from the JSON Array
-                            getClients(result);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        //Calling method getClients() to get the clients from the JSON Array
+                        getClients(result);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "onResponse: ", e);
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
+                error -> {
                 });
         //Creating a request queue
         RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
@@ -158,34 +138,19 @@ public class CustomerCreditDetailsFragment extends Fragment {
                 //Adding the name of the student to array list
                 clients.add(json.getString("name"));
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "getClients: ", e);
             }
         }
         //Setting adapter to show the items in the spinner
-        client.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, clients));
+        client.setAdapter(new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, clients));
     }
-    //Method to get zone name of a particular position
-    private String getName(int position){
-        String name="";
-        try {
-            //Getting object of given index
-            JSONObject json = result.getJSONObject(position);
-            //Fetching name from that object
-            name = json.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //Returning the name
-        return name;
-    }
-    //Doing the same with this method as we did with getName()
     private String getCode(int position){
         String code="";
         try {
             JSONObject json = result.getJSONObject(position);
             code = json.getString("code");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "getCode: ", e);
         }
         return code;
     }
@@ -193,77 +158,74 @@ public class CustomerCreditDetailsFragment extends Fragment {
     private void getData(final String code, final String fromVal) {
         final String TAG = requireActivity().getClass().getSimpleName();
         final String tag_string_req = "req_tag";
-        final RotatingCircularDotsLoader loader = new RotatingCircularDotsLoader(requireActivity(),
-                20, 60, ContextCompat.getColor(requireActivity(), R.color.design_default_color_primary));
-        loader.setAnimDuration(3000);
+        final TrailingDotsLoader loader = new TrailingDotsLoader(getActivity());
+        loader.setPrimaryColor(Color.parseColor(AppConfig.loaderPrimaryColor));
+        loader.setSecondaryColor(Color.parseColor(AppConfig.loaderSecondaryColor));
+        loader.setDotCount(AppConfig.loaderDotsCount);
+        loader.setDotRadius(AppConfig.loaderDotsRadius);
+        loader.setAnimationDuration(AppConfig.loaderAnimationDuration);
         parentContainer.addView(loader);
-        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_CUSTOMER_CREDIT_DETAILS, new com.android.volley.Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Response: " + response);
-                parentContainer.removeView(loader);
-                try {
-                    JSONObject jsonObject;
-                    JSONObject drinkObject = new JSONObject(response);
-                    JSONArray jsonArray = drinkObject.getJSONArray("data");
-                    for(int i=0; i<jsonArray.length();i++){
-                        jsonObject = jsonArray.getJSONObject(i);
-                        tableRow = LayoutInflater.from(getActivity()).inflate(R.layout.table_item3, null, false);
-                        //table components
-                        rno = tableRow.findViewById(R.id.rNo);
-                        rdate = tableRow.findViewById(R.id.rDate);
-                        ccode = tableRow.findViewById(R.id.cCode);
-                        acode = tableRow.findViewById(R.id.aCode);
-                        amtype = tableRow.findViewById(R.id.amountType);
-                        amount = tableRow.findViewById(R.id.amount);
-                        ramount = tableRow.findViewById(R.id.rAmount);
-                        chqno = tableRow.findViewById(R.id.chqNo);
-                        chqdate = tableRow.findViewById(R.id.chqDate);
-                        bankname = tableRow.findViewById(R.id.bank);
-                        remark = tableRow.findViewById(R.id.remark);
-                        isrecrev = tableRow.findViewById(R.id.isRecREv);
-                        isassign = tableRow.findViewById(R.id.isAssign);
-                        created = tableRow.findViewById(R.id.created);
-                        createdby = tableRow.findViewById(R.id.createdBy);
-                        modified = tableRow.findViewById(R.id.modified);
-                        modifiedby = tableRow.findViewById(R.id.modifiedBy);
-                        srno = tableRow.findViewById(R.id.srNo);
-                        balance = tableRow.findViewById(R.id.cbalance);
-                        country = tableRow.findViewById(R.id.country);
-                        rno.setText(jsonObject.getString("SrNo"));
-                        rdate.setText(jsonObject.getString("CustomerCode"));
-                        ccode.setText(jsonObject.getString("CustomerName"));
-                        acode.setText(jsonObject.getString("Address1"));
-                        amtype.setText(jsonObject.getString("City"));
-                        amount.setText(jsonObject.getString("Country"));
-                        ramount.setText(jsonObject.getString("Phone"));
-                        chqno.setText(jsonObject.getString("Email"));
-                        chqdate.setText(jsonObject.getString("Website"));
-                        bankname.setText(jsonObject.getString("PinNO"));
-                        remark.setText(jsonObject.getString("VATNo"));
-                        isrecrev.setText(jsonObject.getString("CreditDays"));
-                        isassign.setText(jsonObject.getString("CreditAmount"));
-                        created.setText(jsonObject.getString("OpeningBalance"));
-                        createdby.setText(jsonObject.getString("SubRouteCode"));
-                        modified.setText(jsonObject.getString("Created"));
-                        modifiedby.setText(jsonObject.getString("CreatedBy"));
-                        srno.setText(jsonObject.getString("Modified"));
-                        balance.setText(jsonObject.getString("ModifiedBy"));
-                        country.setText(jsonObject.getString("ClosingBalance"));
-                        items.addView(tableRow);
-                    }
-                    parentContainer.removeView(loader);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_CUSTOMER_CREDIT_DETAILS, response -> {
+            Log.d(TAG, "Response: " + response);
+            parentContainer.removeView(loader);
+            try {
+                JSONObject jsonObject;
+                JSONObject drinkObject = new JSONObject(response);
+                JSONArray jsonArray = drinkObject.getJSONArray("data");
+                for(int i=0; i<jsonArray.length();i++){
+                    jsonObject = jsonArray.getJSONObject(i);
+                    tableRow = LayoutInflater.from(getActivity()).inflate(R.layout.table_item3, null, false);
+                    //table components
+                    rno = tableRow.findViewById(R.id.rNo);
+                    rDate = tableRow.findViewById(R.id.rDate);
+                    cCode = tableRow.findViewById(R.id.cCode);
+                    aCode = tableRow.findViewById(R.id.aCode);
+                    amType = tableRow.findViewById(R.id.amountType);
+                    amount = tableRow.findViewById(R.id.amount);
+                    rAmount = tableRow.findViewById(R.id.rAmount);
+                    chqNo = tableRow.findViewById(R.id.chqNo);
+                    chqDate = tableRow.findViewById(R.id.chqDate);
+                    bankName = tableRow.findViewById(R.id.bank);
+                    remark = tableRow.findViewById(R.id.remark);
+                    isRecRev = tableRow.findViewById(R.id.isRecREv);
+                    isAssign = tableRow.findViewById(R.id.isAssign);
+                    created = tableRow.findViewById(R.id.created);
+                    createdBy = tableRow.findViewById(R.id.createdBy);
+                    modified = tableRow.findViewById(R.id.modified);
+                    modifiedBy = tableRow.findViewById(R.id.modifiedBy);
+                    srNo = tableRow.findViewById(R.id.srNo);
+                    balance = tableRow.findViewById(R.id.cbalance);
+                    country = tableRow.findViewById(R.id.country);
+                    rno.setText(jsonObject.getString("SrNo"));
+                    rDate.setText(jsonObject.getString("CustomerCode"));
+                    cCode.setText(jsonObject.getString("CustomerName"));
+                    aCode.setText(jsonObject.getString("Address1"));
+                    amType.setText(jsonObject.getString("City"));
+                    amount.setText(jsonObject.getString("Country"));
+                    rAmount.setText(jsonObject.getString("Phone"));
+                    chqNo.setText(jsonObject.getString("Email"));
+                    chqDate.setText(jsonObject.getString("Website"));
+                    bankName.setText(jsonObject.getString("PinNO"));
+                    remark.setText(jsonObject.getString("VATNo"));
+                    isRecRev.setText(jsonObject.getString("CreditDays"));
+                    isAssign.setText(jsonObject.getString("CreditAmount"));
+                    created.setText(jsonObject.getString("OpeningBalance"));
+                    createdBy.setText(jsonObject.getString("SubRouteCode"));
+                    modified.setText(jsonObject.getString("Created"));
+                    modifiedBy.setText(jsonObject.getString("CreatedBy"));
+                    srNo.setText(jsonObject.getString("Modified"));
+                    balance.setText(jsonObject.getString("ModifiedBy"));
+                    country.setText(jsonObject.getString("ClosingBalance"));
+                    items.addView(tableRow);
                 }
-            }
-        }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Request Error: " + error.getMessage());
-                Toast.makeText(getActivity(), " An error has occurred "+error.getMessage(), Toast.LENGTH_LONG).show();
                 parentContainer.removeView(loader);
+            } catch (JSONException e) {
+                Log.e(TAG, "getData: ", e);
             }
+        }, error -> {
+            Log.e(TAG, "Request Error: " + error.getMessage());
+            Toast.makeText(getActivity(), " An error has occurred "+error.getMessage(), Toast.LENGTH_LONG).show();
+            parentContainer.removeView(loader);
         }) {
             @Override
             protected Map<String, String> getParams() {
@@ -278,8 +240,8 @@ public class CustomerCreditDetailsFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
     public void removeRows(){
-        int numrows = items.getChildCount();
-        for(int i = 1; i<numrows; i++) {
+        int numRows = items.getChildCount();
+        for(int i = 1; i<numRows; i++) {
             View child = items.getChildAt(i);
             if (child instanceof TableRow) ((ViewGroup) child).removeAllViews();
         }

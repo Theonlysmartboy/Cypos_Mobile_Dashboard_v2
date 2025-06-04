@@ -40,7 +40,7 @@ public class WelcomeActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // when this activity is about to be launch we need to check if its openened before or not
+        // when this activity is about to be launch we need to check if its opened before or not
         if (restorePrefData()) {
             Intent launcherActivity = new Intent(getApplicationContext(), SplashActivity.class );
             startActivity(launcherActivity);
@@ -68,28 +68,25 @@ public class WelcomeActivity extends AppCompatActivity {
         // setup viewpager
         pagerAdapter = new WelcomeViewPagerAdapter(this,list);
         viewPager.setAdapter(pagerAdapter);
-        // setup tablayout with viewpager
+        // setup tab layout with viewpager
         layout.setupWithViewPager(viewPager);
-        // next button click Listner
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                position = viewPager.getCurrentItem();
-                if (position < list.size()) {
-                    position++;
-                    viewPager.setCurrentItem(position);
-                }
-                if (position == list.size()-1) { // when we reach to the last screen
-                    loaddLastScreen();
-                }
+        // next button click Listener
+        next.setOnClickListener(view -> {
+            position = viewPager.getCurrentItem();
+            if (position < list.size()) {
+                position++;
+                viewPager.setCurrentItem(position);
+            }
+            if (position == list.size()-1) { // when we reach to the last screen
+                loadLastScreen();
             }
         });
-        // tablayout add change listener
+        // tab layout add change listener
         layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == list.size()-1) {
-                    loaddLastScreen();
+                    loadLastScreen();
                 }
             }
             @Override
@@ -101,34 +98,23 @@ public class WelcomeActivity extends AppCompatActivity {
         });
         // Get Started button click listener
 
-        btnGetStarted.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //open main activity
-                Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(loginActivity);
-                //SAVE a boolean value to show that user has already seen the welcome screen
-                savePrefsData();
-                finish();
-            }
+        btnGetStarted.setOnClickListener(v -> {
+            //open main activity
+            Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(loginActivity);
+            //SAVE a boolean value to show that user has already seen the welcome screen
+            savePrefsData();
+            finish();
         });
         // skip button click listener
-        skip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(list.size());
-            }
-        });
+        skip.setOnClickListener(v -> viewPager.setCurrentItem(list.size()));
         //configure button click listener
-        btnConfig.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent config = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(config);
-                //SAVE a boolean value to show that user has already seen the welcome screen
-                savePrefsData();
-                finish();
-            }
+        btnConfig.setOnClickListener(view -> {
+            Intent config = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(config);
+            //SAVE a boolean value to show that user has already seen the welcome screen
+            savePrefsData();
+            finish();
         });
     }
     private boolean restorePrefData() {
@@ -141,8 +127,8 @@ public class WelcomeActivity extends AppCompatActivity {
         editor.putBoolean("isIntroOpened", true);
         editor.apply();
     }
-    // show the GETSTARTED Button and hide the indicator and the next button
-    private void loaddLastScreen() {
+    // show the GET STARTED Button and hide the indicator and the next button
+    private void loadLastScreen() {
         next.setVisibility(View.INVISIBLE);
         btnGetStarted.setVisibility(View.VISIBLE);
         btnConfig.setVisibility(View.VISIBLE);

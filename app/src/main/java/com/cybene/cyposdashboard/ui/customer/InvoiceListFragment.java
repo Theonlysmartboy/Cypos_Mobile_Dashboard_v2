@@ -1,9 +1,9 @@
 package com.cybene.cyposdashboard.ui.customer;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -22,27 +21,23 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.agrawalsuneet.dotsloader.loaders.RotatingCircularDotsLoader;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.utils.AppConfig;
 import com.cybene.cyposdashboard.utils.AppController;
+import com.cybene.cyposdashboard.utils.TrailingDotsLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class InvoiceListFragment extends Fragment {
     private String TAG;
@@ -68,7 +63,7 @@ public class InvoiceListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_invoice_list2, container, false);
+        View v = inflater.inflate(R.layout.fragment_customer_invoice_list, container, false);
         client = v.findViewById(R.id.client);
         clients = new ArrayList<>();
         TAG = requireActivity().getClass().getSimpleName();
@@ -88,83 +83,58 @@ public class InvoiceListFragment extends Fragment {
         parentContainer = v.findViewById(R.id.parentContainer);
         from = v.findViewById(R.id.date_from);
         to = v.findViewById(R.id.date_to);
-        from.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
-                picker = new DatePickerDialog(requireActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        from.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
-                    }
-                }, year, month, day);
-                picker.getDatePicker().setLayoutMode(1);
-                picker.show();
-            }
+        from.setOnClickListener(view -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            // date picker dialog
+            picker = new DatePickerDialog(requireActivity(), (view1, year1, monthOfYear, dayOfMonth) -> from.setText(year1 + "-" + (monthOfYear+1) + "-" + dayOfMonth), year, month, day);
+            picker.getDatePicker().setLayoutMode(1);
+            picker.show();
         });
         to = v.findViewById(R.id.date_to);
-        to.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
-                picker = new DatePickerDialog(requireActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        to.setText(year + "-" + (monthOfYear+1) + "-" + dayOfMonth);
-                    }
-                }, year, month, day);
-                picker.getDatePicker().setLayoutMode(1);
-                picker.show();
-            }
+        to.setOnClickListener(view -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            // date picker dialog
+            picker = new DatePickerDialog(requireActivity(), (view2, year2, monthOfYear, dayOfMonth) -> to.setText(year2 + "-" + (monthOfYear+1) + "-" + dayOfMonth), year, month, day);
+            picker.getDatePicker().setLayoutMode(1);
+            picker.show();
         });
         show = v.findViewById(R.id.show);
-        show.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fromVal = from.getText().toString().trim();
-                toVal = to.getText().toString().trim();
-                removeRows();
-                getData(code,fromVal,toVal);
+        show.setOnClickListener(view -> {
+            fromVal = from.getText().toString().trim();
+            toVal = to.getText().toString().trim();
+            removeRows();
+            getData(code,fromVal,toVal);
 
-            }
         });
         return v;
     }
     private void getClientData(){
         //Creating a string request
         StringRequest stringRequest = new StringRequest(Request.Method.GET, AppConfig.URL_CLIENTS,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d( TAG,"Client Response " + response);
-                        JSONObject j;
-                        try {
-                            //Parsing the fetched Json String to JSON Object
-                            j = new JSONObject(response);
+                response -> {
+                    Log.d(TAG, "Client Response " + response);
+                    JSONObject j;
+                    try {
+                        //Parsing the fetched Json String to JSON Object
+                        j = new JSONObject(response);
 
-                            //Storing the Array of JSON String to our JSON Array
-                            result = j.getJSONArray("data");
+                        //Storing the Array of JSON String to our JSON Array
+                        result = j.getJSONArray("data");
 
-                            //Calling method getclients to get the clients from the JSON Array
-                            getClients(result);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        //Calling method getClients to get the clients from the JSON Array
+                        getClients(result);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "getClientData: ", e);
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                error -> {
 
-                    }
                 });
         //Creating a request queue
         RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
@@ -181,37 +151,20 @@ public class InvoiceListFragment extends Fragment {
                 //Adding the name of the student to array list
                 clients.add(json.getString("name"));
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "getClients: ", e);
             }
         }
 
         //Setting adapter to show the items in the spinner
-        client.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, clients));
+        client.setAdapter(new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, clients));
     }
-
-    //Method to get zone name of a particular position
-    private String getName(int position){
-        String name="";
-        try {
-            //Getting object of given index
-            JSONObject json = result.getJSONObject(position);
-            //Fetching name from that object
-            name = json.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //Returning the name
-        return name;
-    }
-
-    //Doing the same with this method as we did with getName()
     private String getCode(int position){
         String code="";
         try {
             JSONObject json = result.getJSONObject(position);
             code = json.getString("code");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "getCode: ", e);
         }
         return code;
     }
@@ -219,44 +172,40 @@ public class InvoiceListFragment extends Fragment {
     private void getData(final String code, final String fromVal, final String toVal) {
         final String TAG = requireActivity().getClass().getSimpleName();
         final String tag_string_req = "req_tag";
-        final RotatingCircularDotsLoader loader = new RotatingCircularDotsLoader(requireActivity(),
-                20, 60, ContextCompat.getColor(requireActivity(), R.color.design_default_color_primary));
-        loader.setAnimDuration(3000);
+        final TrailingDotsLoader loader = new TrailingDotsLoader(getActivity());
+        loader.setPrimaryColor(Color.parseColor(AppConfig.loaderPrimaryColor));
+        loader.setSecondaryColor(Color.parseColor(AppConfig.loaderSecondaryColor));
+        loader.setDotCount(AppConfig.loaderDotsCount);
+        loader.setDotRadius(AppConfig.loaderDotsRadius);
+        loader.setAnimationDuration(AppConfig.loaderAnimationDuration);
         parentContainer.addView(loader);
-        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_CUSTOMER_INVOICE_LIST, new com.android.volley.Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Response: " + response);
-                parentContainer.removeView(loader);
-                try {
-                    JSONObject jsonObject;
-                    JSONObject drinkObject = new JSONObject(response);
-                    JSONArray jsonArray = drinkObject.getJSONArray("data");
-                    for(int i=0; i<jsonArray.length();i++){
-                        jsonObject = jsonArray.getJSONObject(i);
-                        tableRow = LayoutInflater.from(getActivity()).inflate(R.layout.table_item, null, false);
-                        //table components
-                        id = tableRow.findViewById(R.id.idNo);
-                        month = tableRow.findViewById(R.id.month);
-                        sales = tableRow.findViewById(R.id.sale);
-                        id.setText(String.valueOf(jsonObject.getInt("InvNo")));
-                        month.setText(jsonObject.getString("InvDate"));
-                        sales.setText(jsonObject.getString("Amount"));
-                        items.addView(tableRow);
-                    }
-                    parentContainer.removeView(loader);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_CUSTOMER_INVOICE_LIST, response -> {
+            Log.d(TAG, "Response: " + response);
+            parentContainer.removeView(loader);
+            try {
+                JSONObject jsonObject;
+                JSONObject drinkObject = new JSONObject(response);
+                JSONArray jsonArray = drinkObject.getJSONArray("data");
+                for(int i=0; i<jsonArray.length();i++){
+                    jsonObject = jsonArray.getJSONObject(i);
+                    tableRow = LayoutInflater.from(getActivity()).inflate(R.layout.table_item, null, false);
+                    //table components
+                    id = tableRow.findViewById(R.id.idNo);
+                    month = tableRow.findViewById(R.id.month);
+                    sales = tableRow.findViewById(R.id.sale);
+                    id.setText(String.valueOf(jsonObject.getInt("InvNo")));
+                    month.setText(jsonObject.getString("InvDate"));
+                    sales.setText(jsonObject.getString("Amount"));
+                    items.addView(tableRow);
                 }
-            }
-        }, new com.android.volley.Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Request Error: " + error.getMessage());
-                Toast.makeText(getActivity(), " An error has occurred "+error.getMessage(), Toast.LENGTH_LONG).show();
                 parentContainer.removeView(loader);
+            } catch (JSONException e) {
+                Log.e(TAG, "getData: ", e );
             }
+        }, error -> {
+            Log.e(TAG, "Request Error: " + error.getMessage());
+            Toast.makeText(getActivity(), " An error has occurred "+error.getMessage(), Toast.LENGTH_LONG).show();
+            parentContainer.removeView(loader);
         }) {
 
             @Override
@@ -273,8 +222,8 @@ public class InvoiceListFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
     public void removeRows(){
-        int numrows = items.getChildCount();
-        for(int i = 1; i<numrows; i++) {
+        int numRows = items.getChildCount();
+        for(int i = 1; i<numRows; i++) {
             View child = items.getChildAt(i);
             if (child instanceof TableRow) ((ViewGroup) child).removeAllViews();
         }

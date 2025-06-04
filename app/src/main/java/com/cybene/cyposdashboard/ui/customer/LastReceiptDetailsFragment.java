@@ -1,8 +1,8 @@
 package com.cybene.cyposdashboard.ui.customer;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -18,16 +18,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.agrawalsuneet.dotsloader.loaders.RotatingCircularDotsLoader;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.utils.AppConfig;
 import com.cybene.cyposdashboard.utils.AppController;
+import com.cybene.cyposdashboard.utils.TrailingDotsLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,8 +44,8 @@ public class LastReceiptDetailsFragment extends Fragment {
     private JSONArray result;
     String code;
     private TableLayout items;
-    TextView rno,rdate,ccode,acode,amtype,amount,ramount,chqno,chqdate,bankname,remark,isrecrev,
-            isassign,created,createdby,modified,modifiedby,srno;
+    TextView rno,rDate,cCode,aCode,amType,amount,rAmount,chqNo,chqDate,bankName,remark,isRecRev,
+            isAssign,created,createdBy,modified,modifiedBy,srNo;
     View tableRow;
     LinearLayout parentContainer;
     public LastReceiptDetailsFragment() {
@@ -80,29 +78,23 @@ public class LastReceiptDetailsFragment extends Fragment {
     private void getClientData(){
         //Creating a string request
         StringRequest stringRequest = new StringRequest(Request.Method.GET, AppConfig.URL_CLIENTS,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d( TAG,"Client Response " + response);
-                        JSONObject j;
-                        try {
-                            //Parsing the fetched Json String to JSON Object
-                            j = new JSONObject(response);
+                response -> {
+                    Log.d( TAG,"Client Response " + response);
+                    JSONObject j;
+                    try {
+                        //Parsing the fetched Json String to JSON Object
+                        j = new JSONObject(response);
 
-                            //Storing the Array of JSON String to our JSON Array
-                            result = j.getJSONArray("data");
+                        //Storing the Array of JSON String to our JSON Array
+                        result = j.getJSONArray("data");
 
-                            //Calling method getclients to get the clients from the JSON Array
-                            getClients(result);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        //Calling method getClients to get the clients from the JSON Array
+                        getClients(result);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "onResponse: ", e );
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
+                error -> {
                 });
         //Creating a request queue
         RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
@@ -119,107 +111,89 @@ public class LastReceiptDetailsFragment extends Fragment {
                 //Adding the name of the student to array list
                 clients.add(json.getString("name"));
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "getClients: ", e );
             }
         }
         //Setting adapter to show the items in the spinner
-        client.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, clients));
+        client.setAdapter(new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, clients));
     }
-    //Method to get zone name of a particular position
-    private String getName(int position){
-        String name="";
-        try {
-            //Getting object of given index
-            JSONObject json = result.getJSONObject(position);
-            //Fetching name from that object
-            name = json.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //Returning the name
-        return name;
-    }
-    //Doing the same with this method as we did with getName()
     private String getCode(int position){
         String code="";
         try {
             JSONObject json = result.getJSONObject(position);
             code = json.getString("code");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "getCode: ", e );
         }
         return code;
     }
     private void getData(final String code) {
         final String TAG = requireActivity().getClass().getSimpleName();
         final String tag_string_req = "req_tag";
-        final RotatingCircularDotsLoader loader = new RotatingCircularDotsLoader(requireActivity(),
-                20, 60, ContextCompat.getColor(requireActivity(), R.color.design_default_color_primary));
-        loader.setAnimDuration(3000);
+        final TrailingDotsLoader loader = new TrailingDotsLoader(getActivity());
+        loader.setPrimaryColor(Color.parseColor(AppConfig.loaderPrimaryColor));
+        loader.setSecondaryColor(Color.parseColor(AppConfig.loaderSecondaryColor));
+        loader.setDotCount(AppConfig.loaderDotsCount);
+        loader.setDotRadius(AppConfig.loaderDotsRadius);
+        loader.setAnimationDuration(AppConfig.loaderAnimationDuration);
         parentContainer.addView(loader);
-        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_CUSTOMER_LAST_RECEIPT_DETAILS, new com.android.volley.Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Response: " + response);
-                parentContainer.removeView(loader);
-                try {
-                    JSONObject jsonObject;
-                    JSONObject drinkObject = new JSONObject(response);
-                    JSONArray jsonArray = drinkObject.getJSONArray("data");
-                    for(int i=0; i<jsonArray.length();i++){
-                        jsonObject = jsonArray.getJSONObject(i);
-                        tableRow = LayoutInflater.from(getActivity()).inflate(R.layout.table_item1, null, false);
-                        //table components
-                        rno = tableRow.findViewById(R.id.rNo);
-                        rdate = tableRow.findViewById(R.id.rDate);
-                        ccode = tableRow.findViewById(R.id.cCode);
-                        acode = tableRow.findViewById(R.id.aCode);
-                        amtype = tableRow.findViewById(R.id.amountType);
-                        amount = tableRow.findViewById(R.id.amount);
-                        ramount = tableRow.findViewById(R.id.rAmount);
-                        chqno = tableRow.findViewById(R.id.chqNo);
-                        chqdate = tableRow.findViewById(R.id.chqDate);
-                        bankname = tableRow.findViewById(R.id.bank);
-                        remark = tableRow.findViewById(R.id.remark);
-                        isrecrev = tableRow.findViewById(R.id.isRecREv);
-                        isassign = tableRow.findViewById(R.id.isAssign);
-                        created = tableRow.findViewById(R.id.created);
-                        createdby = tableRow.findViewById(R.id.createdBy);
-                        modified = tableRow.findViewById(R.id.modified);
-                        modifiedby = tableRow.findViewById(R.id.modifiedBy);
-                        srno = tableRow.findViewById(R.id.srNo);
-                        rno.setText(jsonObject.getString("ReceiptNo"));
-                        rdate.setText(jsonObject.getString("ReceiptDate"));
-                        ccode.setText(jsonObject.getString("CustomerCode"));
-                        acode.setText(jsonObject.getString("AccCode"));
-                        amtype.setText(jsonObject.getString("AmountType"));
-                        amount.setText(jsonObject.getString("Amount"));
-                        ramount.setText(jsonObject.getString("RemainingAmount"));
-                        chqno.setText(jsonObject.getString("ChqNo"));
-                        chqdate.setText(jsonObject.getString("ChqDate"));
-                        bankname.setText(jsonObject.getString("BankName"));
-                        remark.setText(jsonObject.getString("Remark"));
-                        isrecrev.setText(jsonObject.getString("isRecRev"));
-                        isassign.setText(jsonObject.getString("isAssign"));
-                        created.setText(jsonObject.getString("Created"));
-                        createdby.setText(jsonObject.getString("CreatedBy"));
-                        modified.setText(jsonObject.getString("Modified"));
-                        modifiedby.setText(jsonObject.getString("ModifiedBy"));
-                        srno.setText(jsonObject.getString("SrNo"));
-                        items.addView(tableRow);
-                    }
-                    parentContainer.removeView(loader);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_CUSTOMER_LAST_RECEIPT_DETAILS, response -> {
+            Log.d(TAG, "Response: " + response);
+            parentContainer.removeView(loader);
+            try {
+                JSONObject jsonObject;
+                JSONObject drinkObject = new JSONObject(response);
+                JSONArray jsonArray = drinkObject.getJSONArray("data");
+                for(int i=0; i<jsonArray.length();i++){
+                    jsonObject = jsonArray.getJSONObject(i);
+                    tableRow = LayoutInflater.from(getActivity()).inflate(R.layout.table_item1, null, false);
+                    //table components
+                    rno = tableRow.findViewById(R.id.rNo);
+                    rDate = tableRow.findViewById(R.id.rDate);
+                    cCode = tableRow.findViewById(R.id.cCode);
+                    aCode = tableRow.findViewById(R.id.aCode);
+                    amType = tableRow.findViewById(R.id.amountType);
+                    amount = tableRow.findViewById(R.id.amount);
+                    rAmount = tableRow.findViewById(R.id.rAmount);
+                    chqNo = tableRow.findViewById(R.id.chqNo);
+                    chqDate = tableRow.findViewById(R.id.chqDate);
+                    bankName = tableRow.findViewById(R.id.bank);
+                    remark = tableRow.findViewById(R.id.remark);
+                    isRecRev = tableRow.findViewById(R.id.isRecREv);
+                    isAssign = tableRow.findViewById(R.id.isAssign);
+                    created = tableRow.findViewById(R.id.created);
+                    createdBy = tableRow.findViewById(R.id.createdBy);
+                    modified = tableRow.findViewById(R.id.modified);
+                    modifiedBy = tableRow.findViewById(R.id.modifiedBy);
+                    srNo = tableRow.findViewById(R.id.srNo);
+                    rno.setText(jsonObject.getString("ReceiptNo"));
+                    rDate.setText(jsonObject.getString("ReceiptDate"));
+                    cCode.setText(jsonObject.getString("CustomerCode"));
+                    aCode.setText(jsonObject.getString("AccCode"));
+                    amType.setText(jsonObject.getString("AmountType"));
+                    amount.setText(jsonObject.getString("Amount"));
+                    rAmount.setText(jsonObject.getString("RemainingAmount"));
+                    chqNo.setText(jsonObject.getString("ChqNo"));
+                    chqDate.setText(jsonObject.getString("ChqDate"));
+                    bankName.setText(jsonObject.getString("BankName"));
+                    remark.setText(jsonObject.getString("Remark"));
+                    isRecRev.setText(jsonObject.getString("isRecRev"));
+                    isAssign.setText(jsonObject.getString("isAssign"));
+                    created.setText(jsonObject.getString("Created"));
+                    createdBy.setText(jsonObject.getString("CreatedBy"));
+                    modified.setText(jsonObject.getString("Modified"));
+                    modifiedBy.setText(jsonObject.getString("ModifiedBy"));
+                    srNo.setText(jsonObject.getString("SrNo"));
+                    items.addView(tableRow);
                 }
-            }
-        }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Request Error: " + error.getMessage());
-                Toast.makeText(getActivity(), " An error has occurred "+error.getMessage(), Toast.LENGTH_LONG).show();
                 parentContainer.removeView(loader);
+            } catch (JSONException e) {
+                Log.e(TAG, "getData: ", e );
             }
+        }, error -> {
+            Log.e(TAG, "Request Error: " + error.getMessage());
+            Toast.makeText(getActivity(), " An error has occurred "+error.getMessage(), Toast.LENGTH_LONG).show();
+            parentContainer.removeView(loader);
         }) {
             @Override
             protected Map<String, String> getParams() {
@@ -233,8 +207,8 @@ public class LastReceiptDetailsFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
     public void removeRows(){
-        int numrows = items.getChildCount();
-        for(int i = 1; i<numrows; i++) {
+        int numRows = items.getChildCount();
+        for(int i = 1; i<numRows; i++) {
             View child = items.getChildAt(i);
             if (child instanceof TableRow) ((ViewGroup) child).removeAllViews();
         }

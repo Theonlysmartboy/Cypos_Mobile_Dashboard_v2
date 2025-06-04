@@ -34,7 +34,7 @@ public class CustomerFragment extends Fragment {
     }
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        CustomerPagerAdapter pagerAdapter = new CustomerPagerAdapter(getActivity().getSupportFragmentManager());
+        CustomerPagerAdapter pagerAdapter = new CustomerPagerAdapter(requireActivity().getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }

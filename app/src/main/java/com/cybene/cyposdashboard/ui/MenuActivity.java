@@ -79,29 +79,28 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
         return true;
     }
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_notifications:
-                return true;
-            case R.id.action_profile:
-                Intent profile = new Intent(MenuActivity.this, PasswordResetActivity.class);
-                startActivity(profile);
-                return true;
-            case R.id.action_logout:
-                //restore prefs
-                    SharedPrefs.getInstance().saveString("isLoggedIn", "");
-                    //delete user from sync db
-                    myDb.deleteUser();
-                    //move app to login
-                    Intent Main = new Intent(MenuActivity.this, LoginActivity.class);
-                    startActivity(Main);
-                    finish();
-                return true;
-            case R.id.action_settings:
-                Toast.makeText(this,"Module not yet available",Toast.LENGTH_LONG).show();
-                return true;
+        if(item.getItemId() == R.id.action_notifications){
+            return true;
+        } else if (item.getItemId() == R.id.action_profile) {
+            Intent profile = new Intent(MenuActivity.this, PasswordResetActivity.class);
+            startActivity(profile);
+            return true;
+        } else if (item.getItemId() == R.id.action_logout) {
+            //restore prefs
+            SharedPrefs.getInstance().saveString("isLoggedIn", "");
+            //delete user from sync db
+            myDb.deleteUser();
+            //move app to login
+            Intent Main = new Intent(MenuActivity.this, LoginActivity.class);
+            startActivity(Main);
+            finish();
+            return true;
+        }else if(item.getItemId() == R.id.action_settings){
+            Toast.makeText(this,"Module not yet available",Toast.LENGTH_LONG).show();
+            return true;
+        }else{
+            return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.cybene.cyposdashboard.R;
@@ -45,7 +46,7 @@ public class MonthlySalesDataGridFragment extends Fragment {
 
     private void getData() {
         Call<List<MonthlySalesGrid>> call = ApiClient.getApiClient().create(MonthlySalesGridInterface.class).getSalesInfo();
-        call.enqueue(new Callback<List<MonthlySalesGrid>>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NotNull Call<List<MonthlySalesGrid>> call, @NotNull Response<List<MonthlySalesGrid>> response) {
                 //check if the response body is null
@@ -67,7 +68,7 @@ public class MonthlySalesDataGridFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<MonthlySalesGrid>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<MonthlySalesGrid>> call, @NonNull Throwable t) {
 
             }
         });

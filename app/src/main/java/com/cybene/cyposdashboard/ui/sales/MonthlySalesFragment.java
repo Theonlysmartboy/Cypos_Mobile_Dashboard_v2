@@ -2,6 +2,7 @@ package com.cybene.cyposdashboard.ui.sales;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -97,7 +98,7 @@ public class MonthlySalesFragment extends Fragment implements OnChartGestureList
 
     private void getMonthlySales() {
         Call<List<MonthlySales>> call = ApiClient.getApiClient().create(MonthlySalesInterface.class).getSalesInfo();
-        call.enqueue(new Callback<List<MonthlySales>>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NotNull Call<List<MonthlySales>> call, @NotNull Response<List<MonthlySales>> response) {
                 //check if the response body is null
@@ -130,7 +131,7 @@ public class MonthlySalesFragment extends Fragment implements OnChartGestureList
             }
 
             @Override
-            public void onFailure(Call<List<MonthlySales>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<MonthlySales>> call, @NonNull Throwable t) {
 
             }
         });

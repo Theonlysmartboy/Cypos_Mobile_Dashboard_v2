@@ -37,9 +37,6 @@ public class DailyPurchaseChartFragment extends Fragment implements OnChartGestu
     public DailyPurchaseChartFragment() {
         // Required empty public constructor
     }
-    public static DailyPurchaseChartFragment newInstance(){
-        return new DailyPurchaseChartFragment();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

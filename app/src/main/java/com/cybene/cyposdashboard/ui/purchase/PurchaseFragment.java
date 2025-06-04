@@ -1,4 +1,4 @@
-package com.cybene.cyposdashboard.ui.sales;
+package com.cybene.cyposdashboard.ui.purchase;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,26 +11,21 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.cybene.cyposdashboard.R;
-import com.cybene.cyposdashboard.ui.fragment.SimpleFragment;
-import com.cybene.cyposdashboard.utils.adapter.SalesPagerAdapter;
+import com.cybene.cyposdashboard.utils.adapter.PurchasePagerAdapter;
 import com.google.android.material.tabs.TabLayout;
-public class HomeFragment extends SimpleFragment{
+
+public class PurchaseFragment extends Fragment {
     ViewPager viewPager;
     TabLayout tabLayout;
-    @NonNull
-    public static Fragment newInstance() {
-        return new HomeFragment();
-    }
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
-        viewPager = v.findViewById(R.id.viewpager);
-        tabLayout=v.findViewById(R.id.pager);
-        return v;
+        View root = inflater.inflate(R.layout.fragment_purchase, container, false);
+        viewPager = root.findViewById(R.id.viewpager);
+        tabLayout= root.findViewById(R.id.pager);
+        return root;
     }
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        SalesPagerAdapter pagerAdapter = new SalesPagerAdapter(getActivity().getSupportFragmentManager());
+        PurchasePagerAdapter pagerAdapter = new PurchasePagerAdapter(requireActivity().getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }

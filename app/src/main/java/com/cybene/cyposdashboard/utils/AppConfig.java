@@ -78,4 +78,9 @@ public class AppConfig {
     public static final String URL_SUPPLIER_WISE_MONTHLY_PURCHASE = BASE_URL+"/cyposbackend/controller/suppliers/MonthlyPurchaseSupplierWiseController.php";
     public static final String URL_SUPPLIER_LAST_PAYMENT_DETAILS = BASE_URL+"/cyposbackend/controller/suppliers/LastPaymentDetailsController.php";
     public static final String URL_SUPPLIER_CREDIT_DETAILS = BASE_URL+"/cyposbackend/controller/suppliers/SupplierCreditDetailsController.php";
+    public static String loaderPrimaryColor = "#FF5722";
+    public static String loaderSecondaryColor = "#FF9800";
+    public static int loaderDotsCount = 10;
+    public static int loaderDotsRadius = 12;
+    public static int loaderAnimationDuration = 3000;
 }
