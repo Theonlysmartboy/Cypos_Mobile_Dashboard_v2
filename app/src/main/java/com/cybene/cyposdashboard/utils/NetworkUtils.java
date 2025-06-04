@@ -10,7 +10,6 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 public class NetworkUtils {
-    // Modern way (Android 6.0+)
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (manager == null) return false;
@@ -45,7 +44,7 @@ public class NetworkUtils {
             }
         });
 
-        // Exit App (optional)
+        // Exit App
         if (allowExit) {
             builder.setNegativeButton("Exit", (dialog, which) -> {
                 if (context instanceof android.app.Activity) {
@@ -58,7 +57,7 @@ public class NetworkUtils {
         builder.show();
     }
 
-    // Optional: Listen for network changes dynamically
+    //Listen for network changes dynamically
     public static void registerNetworkCallback(Context context, ConnectivityManager.NetworkCallback callback) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (manager != null) {
