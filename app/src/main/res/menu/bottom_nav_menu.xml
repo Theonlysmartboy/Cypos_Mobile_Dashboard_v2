@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
@@ -24,17 +21,4 @@
             android:id="@+id/nav_accounts"
             android:icon="@drawable/ic_accounting"
             android:title="@string/accounts" />
-        <item
-            android:id="@+id/nav_branch"
-            android:icon="@drawable/ic_franchise"
-            android:title="@string/branches" />
-        <item
-            android:id="@+id/nav_customer"
-            android:icon="@drawable/ic_dashboard"
-            android:title="@string/customer_dashboard" />
-        <item
-            android:id="@+id/nav_supplier"
-            android:icon="@drawable/ic_dashboard"
-            android:title="@string/supplier_dashboard" />
-    </group>
 </menu>

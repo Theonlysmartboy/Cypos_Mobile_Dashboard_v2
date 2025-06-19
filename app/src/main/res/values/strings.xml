@@ -186,4 +186,9 @@
     <string name="monthly_sales_customer_wise">Monthly Sales Customer Wise</string>
     <string name="customer_credit_details">Customer Credit Details</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="recent_transactions">Recent Transactions</string>
+    <string name="today_s_sales">Today\'s Sales</string>
+    <string name="kes_245_800">KES 245,800</string>
+    <string name="_12_from_yesterday">▲12% from yesterday</string>
+    <string name="test_store_branch_3">Test Store - Branch 3</string>
 </resources>
