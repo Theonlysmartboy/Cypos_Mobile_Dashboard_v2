@@ -57,10 +57,65 @@
                     app:tint="@color/green" />
 
                 <TextView
+                    android:id="@+id/invoiceTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_refund_from_tills"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:id="@+id/invoiceAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/kes_245_800"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:id="@+id/invoiceChange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_12_from_yesterday"
+                    android:textColor="@color/green_success"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/purchasesCard"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/salesCard"
+            app:layout_constraintTop_toTopOf="@+id/salesCard">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:contentDescription="@string/sales"
+                    android:src="@drawable/ic_sale"
+                    app:tint="@color/green" />
+
+                <TextView
                     android:id="@+id/salesTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/today_s_sales"
+                    android:text="@string/total_invoice"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:layout_marginTop="4dp"/>
@@ -86,18 +141,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/purchasesCard"
-            android:layout_width="0dp"
-            android:layout_height="140dp"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/salesCard"
-            app:layout_constraintTop_toTopOf="@+id/salesCard">
-
-            <!-- Card content here -->
-        </androidx.cardview.widget.CardView>
-
         <!-- Stats Row 2 -->
         <androidx.cardview.widget.CardView
             android:id="@+id/profitCard"
@@ -109,19 +152,100 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/salesCard">
 
-            <!-- Card content here -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:contentDescription="@string/sales"
+                    android:src="@drawable/ic_sale"
+                    app:tint="@color/green" />
+
+                <TextView
+                    android:id="@+id/goodsIssuedTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/goods_issued_to_branch"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:id="@+id/goodsIssuedAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/kes_245_800"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:id="@+id/goodsIssuedChange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_12_from_yesterday"
+                    android:textColor="@color/green_success"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/ordersCard"
             android:layout_width="0dp"
             android:layout_height="140dp"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/profitCard"
             app:layout_constraintTop_toTopOf="@+id/profitCard">
 
-            <!-- Card content here -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:contentDescription="@string/sales"
+                    android:src="@drawable/ic_sale"
+                    app:tint="@color/green" />
+
+                <TextView
+                    android:id="@+id/goodsReceivedTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/goods_received_from_branch"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:id="@+id/goodsReceivedAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/kes_245_800"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:id="@+id/goodsReceivedChange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_12_from_yesterday"
+                    android:textColor="@color/green_success"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- Quick Actions -->
