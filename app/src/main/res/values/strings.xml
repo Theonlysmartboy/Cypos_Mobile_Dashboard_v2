@@ -53,6 +53,8 @@
     <string name="monthly_sales_data_grid">Monthly Sales Data Grid</string>
     <string name="month">Month</string>
     <string name="sales">Sales</string>
+    <string name="sales_man">Sales Man</string>
+    <string name="sales_order">Sales Order</string>
     <string name="harsh">#</string>
     <string name="date">Date</string>
     <string name="invoice_number">Invoice No</string>
@@ -64,7 +66,6 @@
     <string name="code">Code</string>
     <string name="cr_no">Cr No</string>
     <string name="transaction">Transaction</string>
-    <string name="sales_man">Sales Man</string>
     <string name="customer">Customer</string>
     <string name="date_from">Date From</string>
     <string name="date_to">Date To</string>

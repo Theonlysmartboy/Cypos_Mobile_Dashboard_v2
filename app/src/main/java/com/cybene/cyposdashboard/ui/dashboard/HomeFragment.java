@@ -6,7 +6,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +18,17 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
+import com.cybene.cyposdashboard.utils.AppConfig;
+import com.cybene.cyposdashboard.utils.adapter.DashboardAdapter;
+import com.cybene.cyposdashboard.utils.items.DashboardItem;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +40,9 @@ import java.util.Objects;
 public class HomeFragment extends Fragment {
     private EditText fromDateEditText, toDateEditText;
     private Calendar calendar;
+    private RecyclerView recyclerView;
+    private DashboardAdapter adapter;
+    private List<DashboardItem> dashboardItems;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -62,6 +78,8 @@ public class HomeFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setSelection(0);
+        recyclerView = root.findViewById(R.id.dashboardRecyclerView);
+        setupRecycler();
         return root;
     }
 
@@ -100,4 +118,77 @@ public class HomeFragment extends Fragment {
         datePickerDialog.show();
     }
 
+    private void setupRecycler() {
+        dashboardItems = new ArrayList<>();
+        adapter = new DashboardAdapter(requireContext(), dashboardItems);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return dashboardItems.get(position).isLargeCard() ? 2 : 1;
+            }
+        });
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
+        // Fetch only after setup
+        fetchDashboardData();
+    }
+
+    private void fetchDashboardData() {
+        String url = AppConfig.URL_DASHBOARD;
+        RequestQueue queue = Volley.newRequestQueue(requireContext());
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        dashboardItems.clear(); // remove hardcoded placeholders
+
+                        // Handle large card
+                        if (response.has("large")) {
+                            JSONObject large = response.getJSONObject("large");
+                            DashboardItem largeCard = new DashboardItem(
+                                    large.optString("title", "Total Cash Sales"),
+                                    large.optString("total_sales", "0.00"),
+                                    R.color.black,
+                                    true
+                            );
+
+                            // Optionally store extra breakdowns
+                            largeCard.setExtra("cash", large.optString("cash", "0.00"));
+                            largeCard.setExtra("mpesa", large.optString("mpesa", "0.00"));
+                            largeCard.setExtra("credit", large.optString("credit", "0.00"));
+                            largeCard.setExtra("expenses", large.optString("expenses", "0.00"));
+                            largeCard.setExtra("total", large.optString("total_sales", "0.00"));
+
+                            dashboardItems.add(largeCard);
+                        }
+
+                        // Handle smaller cards
+                        if (response.has("cards")) {
+                            JSONArray cards = response.getJSONArray("cards");
+                            for (int i = 0; i < cards.length(); i++) {
+                                JSONObject obj = cards.getJSONObject(i);
+                                DashboardItem item = new DashboardItem(
+                                        obj.optString("title", "Unknown"),
+                                        obj.optString("amount", "0.00"),
+                                        R.color.black
+                                );
+                                dashboardItems.add(item);
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        Log.e("Dashboard", "Error parsing dashboard data", e);
+                    }
+                },
+                error -> Log.e("Dashboard", "Network error fetching dashboard data", error)
+        );
+
+        queue.add(request);
+    }
 }

@@ -24,7 +24,6 @@ import com.cybene.cyposdashboard.utils.Converter;
 import com.cybene.cyposdashboard.utils.db.Db;
 import com.cybene.cyposdashboard.utils.db.SharedPrefs;
 import com.cybene.cyposdashboard.utils.interfaces.AddOrRemoveCallbacks;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -67,24 +66,6 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        // Setup Bottom Navigation
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
-
-        // Connect both navigation systems
-        NavigationUI.setupWithNavController(bottomNav, navController);
-
-        // Control bottom nav visibility based on destination
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            int id = destination.getId();
-            if (id == R.id.nav_home || id == R.id.nav_sales || id == R.id.nav_purchase
-                    || id == R.id.nav_inventory || id == R.id.nav_accounts || id == R.id.nav_branch
-                    || id == R.id.nav_customer || id == R.id.nav_supplier ) {
-                bottomNav.setVisibility(View.VISIBLE);
-            } else {
-                bottomNav.setVisibility(View.GONE);
-            }
-        });
     }
 
     @Override
