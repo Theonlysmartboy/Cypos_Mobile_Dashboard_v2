@@ -1,5 +1,6 @@
 package com.cybene.cyposdashboard.ui.dashboard;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -10,29 +11,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cybene.cyposdashboard.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
+    private EditText fromDateEditText, toDateEditText;
+    private Calendar calendar;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+        fromDateEditText = root.findViewById(R.id.fromDateEditText);
+        toDateEditText = root.findViewById(R.id.toDateEditText);
+        calendar = Calendar.getInstance();
+        fromDateEditText.setOnClickListener(v -> showDatePicker(fromDateEditText));
+        toDateEditText.setOnClickListener(v -> showDatePicker(toDateEditText));
         Spinner spinner = root.findViewById(R.id.branchSelector);
         List<String> branches = new ArrayList<>();
         branches.add("Change Branch");
@@ -57,4 +64,40 @@ public class HomeFragment extends Fragment {
         spinner.setSelection(0);
         return root;
     }
+
+    private void showDatePicker(EditText targetEditText) {
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                requireContext(),
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    calendar.set(selectedYear, selectedMonth, selectedDay);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+                    targetEditText.setText(sdf.format(calendar.getTime()));
+
+                    // Optional: if updating fromDate, clear toDate to force reselection
+                    if (targetEditText == fromDateEditText) {
+                        toDateEditText.setText("");
+                    }
+                },
+                year, month, day
+        );
+
+        // Always limit selection to today or earlier
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+
+        // If selecting 'toDate', ensure it's not before 'fromDate'
+        if (targetEditText == toDateEditText && !fromDateEditText.getText().toString().isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+                calendar.setTime(Objects.requireNonNull(sdf.parse(fromDateEditText.getText().toString())));
+                datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+            } catch (Exception ignored) {}
+        }
+
+        datePickerDialog.show();
+    }
+
 }

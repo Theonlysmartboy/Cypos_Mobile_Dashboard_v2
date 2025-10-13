@@ -46,20 +46,24 @@
             android:paddingBottom="12dp">
 
             <EditText
+                android:id="@+id/fromDateEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:autofillHints="mm/dd/yyy"
                 android:hint="@string/from_date"
-                android:inputType="date" />
+                android:focusable="false"
+                android:clickable="true"
+                android:inputType="none" />
 
             <EditText
+                android:id="@+id/toDateEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:autofillHints="mm/dd/yyy"
                 android:hint="@string/to_date"
-                android:inputType="date" />
+                android:focusable="false"
+                android:clickable="true"
+                android:inputType="none" />
 
             <Button
                 android:layout_width="0dp"
