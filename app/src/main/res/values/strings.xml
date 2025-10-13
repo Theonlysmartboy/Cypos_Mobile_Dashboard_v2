@@ -227,4 +227,8 @@
     <string name="sales_vat_amount">Sales VAT Amount</string>
     <string name="purchase_vat_amount">Purchase VAT Amount</string>
     <string name="payable_tax">Payable Tax</string>
+    <string name="item_list">Item List</string>
+    <string name="productName">Name</string>
+    <string name="productQuantity">Quantity</string>
+    <string name="productPrice">Price</string>
 </resources>
