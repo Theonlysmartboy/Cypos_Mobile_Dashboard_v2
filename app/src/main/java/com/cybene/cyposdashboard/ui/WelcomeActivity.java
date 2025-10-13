@@ -46,7 +46,7 @@ public class WelcomeActivity extends AppCompatActivity {
             startActivity(launcherActivity);
             finish();
         }
-         setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.activity_welcome);
         // hide the action bar
         Objects.requireNonNull(getSupportActionBar()).hide();
         // init views
