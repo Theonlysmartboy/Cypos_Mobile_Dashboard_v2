@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -45,6 +44,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Activity for user registration.
+ * Allows new users to create an account by providing company name, email, and password.
+ */
 public class RegisterActivity extends AppCompatActivity implements TextWatcher, View.OnClickListener {
     private AutoCompleteTextView cName,email;
     private EditText password, cPassword, key;
@@ -57,6 +60,15 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
     LinearLayout container;
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
+    /**
+     * Called when the activity is first created.
+     * This is where you should do all of your normal static set up: create views,
+     * bind data to lists, etc.
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.
+     *     <b><i>Note: Otherwise it is null.</i></b>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +82,9 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
         initializeComponents();
         setControlActionListeners();
     }
+    /**
+     * Initializes the UI components of the activity.
+     */
     private void initializeComponents() {
         cName = findViewById(R.id.txtRcName);
         email = findViewById(R.id.txtREmail);
@@ -82,16 +97,18 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
         container = findViewById(R.id.container);
         show = findViewById(R.id.show);
         view = findViewById(R.id.view);
-        KeyGenerator keyGenerator = new KeyGenerator();
         String activationKey = KeyGenerator.generateKey(4);
         key.setText(activationKey);
-         trailingCircularDotsLoader = new TrailingDotsLoader(this);
+        trailingCircularDotsLoader = new TrailingDotsLoader(this);
         trailingCircularDotsLoader.setPrimaryColor(Color.parseColor(AppConfig.loaderPrimaryColor));
         trailingCircularDotsLoader.setSecondaryColor(Color.parseColor(AppConfig.loaderSecondaryColor));
         trailingCircularDotsLoader.setDotCount(AppConfig.loaderDotsCount);
         trailingCircularDotsLoader.setDotRadius(AppConfig.loaderDotsRadius);
         trailingCircularDotsLoader.setAnimationDuration(AppConfig.loaderAnimationDuration);
     }
+    /**
+     * Sets listeners for the UI controls.
+     */
     private void setControlActionListeners() {
         cPassword.addTextChangedListener(this);
         reg.setOnClickListener(this);
@@ -110,6 +127,10 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
 
     }
 
+    /**
+     * Validates the password confirmation field after text changes.
+     * @param editable The editable text.
+     */
     @Override
     public void afterTextChanged(Editable editable) {
         if(cPassword.getText().length()<8 && !cPassword.getText().toString().trim().equals(password.getText().toString().trim())){
@@ -120,6 +141,10 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
         }
     }
 
+    /**
+     * Handles click events for various views in the activity.
+     * @param view The view that was clicked.
+     */
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.btnRegister){
@@ -129,7 +154,12 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
             passwordVal = password.getText().toString().trim();
             keyVal = key.getText().toString().trim();
             if(valid(cnameVal,emailVal,passwordVal)){
-                createUser(cnameVal,emailVal,passwordVal,keyVal);
+                if(accept.isChecked()){
+                    createUser(cnameVal,emailVal,passwordVal,keyVal);
+                }else{
+                    Toast.makeText(this, "Please accept the terms and conditions", Toast.LENGTH_SHORT).show();
+                }
+
             }
         } else if (view.getId() == R.id.btnLoginLink) {
             showLogin();
@@ -158,11 +188,19 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
         }
     }
 
+    /**
+     * Validates the registration input fields.
+     * @param cnameVal The company name.
+     * @param emailVal The email address.
+     * @param passwordVal The password.
+     * @return True if all inputs are valid, false otherwise.
+     */
+
     private boolean valid(String cnameVal, String emailVal, String passwordVal) {
         ValidateInput validateInput = new ValidateInput();
         boolean valid = true;
         if(!validateInput.validateText(cnameVal)){
-           container.removeView(trailingCircularDotsLoader);
+            container.removeView(trailingCircularDotsLoader);
             cName.setError("Company name is required");
             valid = false;
         }else if (!validateInput.validateText(emailVal)){
@@ -187,6 +225,13 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
         return valid;
     }
 
+    /**
+     * Sends a request to the server to create a new user.
+     * @param cnameVal The company name.
+     * @param emailVal The email address.
+     * @param passwordVal The password.
+     * @param keyVal The activation key.
+     */
     private void createUser(final String cnameVal, final String emailVal, final String passwordVal, final String keyVal) {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             NetworkUtils.showNoInternetDialog(this, true); // true = allow exit
@@ -205,8 +250,6 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
             }
         };
         NetworkUtils.registerNetworkCallback(this, callback);
-        // Tag used to cancel the request
-        String tag_string_req = "req_register";
         StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_REGISTER, response -> {
             Log.d(TAG, "Register Response: " + response);
             hideDialog();
@@ -255,16 +298,25 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher, 
         registerRequestQue.add(strReq);
     }
 
+    /**
+     * Navigates to the Login screen.
+     */
     private void showLogin(){
         Intent login = new Intent(RegisterActivity.this,LoginActivity.class);
         startActivity(login);
         finish();
     }
 
+    /**
+     * Shows the progress dialog.
+     */
     private void showDialog() {
         container.addView(trailingCircularDotsLoader);
     }
 
+    /**
+     * Hides the progress dialog.
+     */
     private void hideDialog() {
         container.removeView(trailingCircularDotsLoader);
     }

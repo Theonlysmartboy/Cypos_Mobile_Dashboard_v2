@@ -27,7 +27,6 @@ import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.ui.MenuActivity;
 import com.cybene.cyposdashboard.utils.AppConfig;
-import com.cybene.cyposdashboard.utils.AppController;
 import com.cybene.cyposdashboard.utils.NetworkUtils;
 import com.cybene.cyposdashboard.utils.TrailingDotsLoader;
 import com.cybene.cyposdashboard.utils.ValidateInput;
@@ -42,6 +41,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+
+/**
+ * A login screen that offers login via email/password.
+ */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     TextView register,reset;
     Button login;
@@ -54,6 +57,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String TAG = LoginActivity.class.getSimpleName();
     TrailingDotsLoader trailingCircularDotsLoader;
     private Db myDb;
+
+    /**
+     * Called when the activity is first created.
+     * This is where you should do all of your normal static set up: create views,
+     * bind data to lists, etc. This method also provides you with a Bundle containing
+     * the activity's previously frozen state, if there was one.
+     * @param savedInstanceState If the activity is being re-initialized after previously
+     *                           being shut down then this Bundle contains the data it most
+     *                           recently supplied in onSaveInstanceState(Bundle).
+     *                           Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +81,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         initializeComponents();
         setControlActionListeners();
     }
+
+    /**
+     * Initializes the UI components and other necessary objects.
+     */
     private void initializeComponents() {
         register = findViewById(R.id.sign_up);
         reset = findViewById(R.id.pwdReset);
@@ -85,6 +103,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         trailingCircularDotsLoader.setDotRadius(AppConfig.loaderDotsRadius);
         trailingCircularDotsLoader.setAnimationDuration(AppConfig.loaderAnimationDuration);
     }
+
+    /**
+     * Sets onClick listeners for the interactive UI elements.
+     */
+
     private void setControlActionListeners() {
         register.setOnClickListener(this);
         reset.setOnClickListener(this);
@@ -92,6 +115,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         remember.setOnClickListener(this);
         view.setOnClickListener(this);
     }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param view The view that was clicked.
+     */
+
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.sign_up){
@@ -118,15 +148,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
+
+    /**
+     * Authenticates the user with the provided credentials.
+     *
+     * @param emailVal    The user's email.
+     * @param passwordVal The user's password.
+     */
+
     private void auth(final String emailVal, final String passwordVal) {
-        // Tag used to cancel the request
-        String tag_string_req = "req_login";
         //showDialog();
         if (!NetworkUtils.isNetworkAvailable(this)) {
             NetworkUtils.showNoInternetDialog(this, true); // true = allow exit
             return; // Stop further execution
         }
-        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_LOGIN, response -> {
+
+        StringRequest strLoginReq = new StringRequest(Request.Method.POST, AppConfig.URL_LOGIN, response -> {
             Log.d(TAG, "Login Response: " + response);
             hideDialog();
             try {
@@ -174,6 +211,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 hideDialog();
                 login.setEnabled(true);
             }
+            assert error.networkResponse != null;
             Log.e(TAG, "Login Error: " +error + ">>" + error.networkResponse.statusCode
                     + ">>" + Arrays.toString(error.networkResponse.data)
                     + ">>" + error.getCause()
@@ -194,13 +232,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         };
 
-        strReq.setRetryPolicy(new DefaultRetryPolicy(
+        strLoginReq.setRetryPolicy(new DefaultRetryPolicy(
                 1000*10,
                 /*DefaultRetryPolicy.DEFAULT_MAX_RETRIES*/ 3,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue loginRequestQue = Volley.newRequestQueue(this);
-        loginRequestQue.add(strReq);
+        loginRequestQue.add(strLoginReq);
     }
+
+    /**
+     * Validates the login input fields.
+     *
+     * @param emailVal    The email to validate.
+     * @param passwordVal The password to validate.
+     * @return True if the input is valid, false otherwise.
+     */
     private boolean validateInput(String emailVal, String passwordVal) {
         ValidateInput validateInput = new ValidateInput();
         boolean valid = true;
@@ -225,23 +271,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         return valid;
     }
+
+    /**
+     * Shows the loading dialog.
+     */
     private void showDialog() {
             container.addView(trailingCircularDotsLoader);
     }
 
+    /**
+     * Hides the loading dialog.
+     */
     private void hideDialog() {
         container.removeView(trailingCircularDotsLoader);
     }
+    /**
+     * Loads the main menu activity.
+     */
     private void loadMain() {
         Intent loadMain = new Intent(LoginActivity.this, MenuActivity.class);
         startActivity(loadMain);
         finish();
     }
+
+    /**
+     * Loads the password recovery activity.
+     */
     private void loadPwdRecovery() {
         Intent showPwdRecovery = new Intent(LoginActivity.this,PasswordRecoveryActivity.class);
         startActivity(showPwdRecovery);
     }
 
+    /**
+     * Loads the sign-up activity.
+     */
     private void loadSignUp() {
         Intent showSignup = new Intent(LoginActivity.this,RegisterActivity.class);
         startActivity(showSignup);
