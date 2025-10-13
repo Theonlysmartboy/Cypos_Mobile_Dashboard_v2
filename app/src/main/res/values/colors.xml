@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#336699</color>
+    <color name="colorPrimaryDark">#003366</color>
+    <color name="colorAccent">#336699</color>
+    <color name="colorGoldenTainoi">#FFCC66</color>
+    <color name="GoldenTainoi">#FF4500</color>
+    <color name="gray">#808080</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#006400</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="maroon">#800000</color>
+    <color name="maroon1">#400a10</color>
+    <color name="skyBlue">#87CEEB</color>
+    <color name="purple">#800080</color>
+    <color name="purple1">#250f59</color>
+    <color name="indigo">#330099</color>
+    <color name="pink">#ff00f7</color>
+    <color name="jungleGreen">#011f08</color>
+    <color name="brown">#331515</color>
+    <color name="brown1">#1c0a0a</color>
+    <color name="green1">#0f5928</color>
+    <color name="blue1">#0f1059</color>
+
+    <color name="card_green_bg">#E8F5E9</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="background">#F5F5F5</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="green_success">#2E7D32</color>
+    <color name="red_warning">#C62828</color>
+</resources>
