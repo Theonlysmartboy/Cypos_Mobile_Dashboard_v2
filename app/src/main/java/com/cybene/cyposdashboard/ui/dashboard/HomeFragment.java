@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment {
                 requireContext(),
                 (view, selectedYear, selectedMonth, selectedDay) -> {
                     calendar.set(selectedYear, selectedMonth, selectedDay);
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault());
                     targetEditText.setText(sdf.format(calendar.getTime()));
 
                     // Optional: if updating fromDate, clear toDate to force reselection
@@ -109,7 +109,7 @@ public class HomeFragment extends Fragment {
         // If selecting 'toDate', ensure it's not before 'fromDate'
         if (targetEditText == toDateEditText && !fromDateEditText.getText().toString().isEmpty()) {
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault());
                 calendar.setTime(Objects.requireNonNull(sdf.parse(fromDateEditText.getText().toString())));
                 datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
             } catch (Exception ignored) {}
