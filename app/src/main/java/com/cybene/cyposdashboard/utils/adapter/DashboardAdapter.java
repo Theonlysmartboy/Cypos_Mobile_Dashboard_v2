@@ -96,8 +96,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             totalSales.setText(item.getExtra("total"));
             totalCash.setText(item.getExtra("cash"));
             totalMpesa.setText(item.getExtra("mpesa"));
-            totalCreditCard.setText(item.getExtra("credit"));
-            totalCheque.setText(item.getExtra("expenses"));
+            totalCheque.setText(item.getExtra("cheque"));
+            totalCreditCard.setText(item.getExtra("card"));
         }
     }
 
@@ -115,7 +115,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         void bind(DashboardItem item) {
             title.setText(item.getTitle());
-            amount.setText(item.getExtra("amount")); // updated to use getExtra
+            amount.setText(item.getAmount());
             amount.setTextColor(ContextCompat.getColor(itemView.getContext(), item.getColorRes()));
         }
     }
