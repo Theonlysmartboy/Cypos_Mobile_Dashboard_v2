@@ -133,8 +133,25 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        // Fetch only after setup
+        // Show placeholders before fetching data
+        showSkeletonLoaders();
+
+        //Fetch real data
         fetchDashboardData();
+    }
+
+    private void showSkeletonLoaders() {
+        dashboardItems.clear();
+
+        // Adding one large skeleton card
+        dashboardItems.add(new DashboardItem("Loading...", "", R.color.gray, true));
+
+        // Adding 4 smaller skeleton cards
+        for (int i = 0; i < 4; i++) {
+            dashboardItems.add(new DashboardItem("Loading...", "", R.color.gray));
+        }
+
+        adapter.notifyDataSetChanged();
     }
 
     private void fetchDashboardData() {
@@ -144,7 +161,7 @@ public class HomeFragment extends Fragment {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
-                        dashboardItems.clear(); // remove hardcoded placeholders
+                        dashboardItems.clear(); // remove hardcoded placeholders and skeleton data
 
                         // Handle large card
                         if (response.has("large")) {
