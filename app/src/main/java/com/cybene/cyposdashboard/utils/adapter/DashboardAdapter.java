@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,6 +50,18 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DashboardItem item = items.get(position);
+
+        if (item.getTitle().equals("Loading...")) {
+            View shimmerView = holder.itemView.findViewById(R.id.shimmerBackground);
+            shimmerView.setVisibility(View.VISIBLE);
+            Animation shimmer = AnimationUtils.loadAnimation(context, R.anim.shimmer_translate);
+            shimmerView.startAnimation(shimmer);
+        } else {
+            View shimmerView = holder.itemView.findViewById(R.id.shimmerBackground);
+            shimmerView.clearAnimation();
+            shimmerView.setVisibility(View.GONE);
+        }
+
         if (holder instanceof LargeCardViewHolder) {
             ((LargeCardViewHolder) holder).bind(item);
         } else if (holder instanceof SmallCardViewHolder) {
@@ -79,11 +93,11 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         void bind(DashboardItem item) {
             title.setText(item.getTitle());
 
-            totalSales.setText("Total Sales: " + item.getExtra("total"));
-            totalCash.setText("Cash: " + item.getExtra("cash"));
-            totalMpesa.setText("Mpesa: " + item.getExtra("mpesa"));
-            totalCreditCard.setText("Credit: " + item.getExtra("credit"));
-            totalCheque.setText("Expenses: " + item.getExtra("expenses"));
+            totalSales.setText(item.getExtra("total"));
+            totalCash.setText(item.getExtra("cash"));
+            totalMpesa.setText(item.getExtra("mpesa"));
+            totalCreditCard.setText(item.getExtra("credit"));
+            totalCheque.setText(item.getExtra("expenses"));
         }
     }
 
