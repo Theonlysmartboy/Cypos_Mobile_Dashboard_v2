@@ -231,4 +231,5 @@
     <string name="productName">Name</string>
     <string name="productQuantity">Quantity</string>
     <string name="productPrice">Price</string>
+    <string name="title">Title</string>
 </resources>
