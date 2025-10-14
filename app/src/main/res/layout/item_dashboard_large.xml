@@ -6,7 +6,15 @@
     android:layout_columnSpan="2"
     android:layout_marginBottom="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background shimmer layer -->
+    <View
+        android:id="@+id/shimmerBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/skeleton_shimmer"
+        android:visibility="gone" />
 
+    <!-- 🔹 Foreground content (won’t shimmer) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -137,4 +145,5 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>
