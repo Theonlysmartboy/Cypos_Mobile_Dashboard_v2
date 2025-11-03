@@ -79,6 +79,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     // ----------------------------------------------------------
     static class LargeCardViewHolder extends RecyclerView.ViewHolder {
         TextView title, totalSales, totalCash, totalMpesa, totalCreditCard, totalCheque;
+        RecyclerView rvComputerSales;
 
         LargeCardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -88,16 +89,25 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             totalMpesa = itemView.findViewById(R.id.totalMpesaAmount);
             totalCreditCard = itemView.findViewById(R.id.totalCreditCardAmount);
             totalCheque = itemView.findViewById(R.id.totalChequeAmount);
+            rvComputerSales = itemView.findViewById(R.id.rvComputerSales);
         }
 
         void bind(DashboardItem item) {
             title.setText(item.getTitle());
-
             totalSales.setText(item.getExtra("total"));
             totalCash.setText(item.getExtra("cash"));
             totalMpesa.setText(item.getExtra("mpesa"));
-            totalCreditCard.setText(item.getExtra("credit"));
-            totalCheque.setText(item.getExtra("expenses"));
+            totalCheque.setText(item.getExtra("cheque"));
+            totalCreditCard.setText(item.getExtra("card"));
+
+            // show nested list if available
+            if (item.getSubList() != null && !item.getSubList().isEmpty()) {
+                rvComputerSales.setVisibility(View.VISIBLE);
+                rvComputerSales.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(itemView.getContext()));
+                rvComputerSales.setAdapter(new ComputerSalesAdapter(itemView.getContext(), item.getSubList()));
+            } else {
+                rvComputerSales.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -115,7 +125,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         void bind(DashboardItem item) {
             title.setText(item.getTitle());
-            amount.setText(item.getExtra("amount")); // updated to use getExtra
+            amount.setText(item.getAmount());
             amount.setTextColor(ContextCompat.getColor(itemView.getContext(), item.getColorRes()));
         }
     }

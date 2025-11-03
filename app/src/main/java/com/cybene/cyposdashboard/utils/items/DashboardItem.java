@@ -1,6 +1,7 @@
 package com.cybene.cyposdashboard.utils.items;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DashboardItem {
@@ -24,6 +25,17 @@ public class DashboardItem {
         this.amount = amount;
         this.colorRes = colorRes;
         this.isLargeCard = isLargeCard;
+    }
+
+    // for large cards list
+    private List<Map<String, String>> subList;
+
+    public void setSubList(List<Map<String, String>> subList) {
+        this.subList = subList;
+    }
+
+    public List<Map<String, String>> getSubList() {
+        return subList;
     }
 
     public String getTitle() { return title; }
