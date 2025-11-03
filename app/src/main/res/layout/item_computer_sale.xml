@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TILL1-PC"
+        android:text="@string/computer_name"
         android:textStyle="bold"
         android:textSize="14sp"
         android:textColor="@android:color/black" />
@@ -20,7 +20,7 @@
         android:id="@+id/tvTotalSales"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="KES 125,000.00"
+        android:text="@string/kes_245_800"
         android:textStyle="bold"
         android:textSize="14sp"
         android:textColor="@android:color/holo_green_dark" />

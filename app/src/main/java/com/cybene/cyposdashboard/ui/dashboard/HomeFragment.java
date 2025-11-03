@@ -20,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -47,7 +46,6 @@ import java.util.Objects;
 public class HomeFragment extends Fragment {
     private EditText fromDateEditText, toDateEditText;
     private String fromDate, toDate;
-    private Button refreshButton;
     private Calendar calendar;
     private RecyclerView recyclerView;
     private DashboardAdapter adapter;
@@ -68,7 +66,7 @@ public class HomeFragment extends Fragment {
         fromDateEditText.setOnClickListener(v -> showDatePicker(fromDateEditText));
         toDateEditText.setOnClickListener(v -> showDatePicker(toDateEditText));
 
-        refreshButton = root.findViewById(R.id.refreshButton);
+        Button refreshButton = root.findViewById(R.id.refreshButton);
         refreshButton.setOnClickListener(v -> {
             fromDate = fromDateEditText.getText().toString().trim();
             toDate = toDateEditText.getText().toString().trim();
@@ -106,9 +104,9 @@ public class HomeFragment extends Fragment {
 
         recyclerView = root.findViewById(R.id.dashboardRecyclerView);
 
-        // Default load: past 10 years to today
+        // Default load: past 2 years to today
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -10);
+        cal.add(Calendar.YEAR, -2);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String defaultFrom = sdf.format(cal.getTime());
         String defaultTo = sdf.format(new Date());
@@ -202,7 +200,7 @@ public class HomeFragment extends Fragment {
                 }
         ) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("from", fromDate);
                 params.put("to", toDate);
