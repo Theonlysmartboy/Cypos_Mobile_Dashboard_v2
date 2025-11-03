@@ -237,21 +237,34 @@ public class HomeFragment extends Fragment {
             dashboardItems.add(new DashboardItem("Credit Note", formatAmount(response.optDouble("creditNote")), R.color.colorGoldenTainoi));
             dashboardItems.add(new DashboardItem("Purchase", formatAmount(response.optDouble("purchase")), R.color.purple1));
             dashboardItems.add(new DashboardItem("Goods Return", formatAmount(response.optDouble("goodsReturn")), R.color.purple));
+            dashboardItems.add(new DashboardItem("Goods Issued BR", formatAmount(response.optDouble("goodsIssuedBR")), R.color.purple));
+            dashboardItems.add(new DashboardItem("Goods Received BR", formatAmount(response.optDouble("goodsReceivedBR")), R.color.purple));
             dashboardItems.add(new DashboardItem("Debit Note", formatAmount(response.optDouble("debitNote")), R.color.red));
             dashboardItems.add(new DashboardItem("Stock Valuation", formatAmount(response.optDouble("stockValuation")), R.color.skyBlue));
-            dashboardItems.add(new DashboardItem("Daily Banking", formatAmount(response.optDouble("dailyBanking")), R.color.maroon));
+            dashboardItems.add(new DashboardItem("Expense", formatAmount(response.optDouble("expense")), R.color.skyBlue));
+            dashboardItems.add(new DashboardItem("Petty Cash", formatAmount(response.optDouble("pettyCash")), R.color.skyBlue));
+            dashboardItems.add(new DashboardItem("Refund Till", formatAmount(response.optDouble("refundTill")), R.color.maroon1));
+            dashboardItems.add(new DashboardItem("Purchase VAT", formatAmount(response.optDouble("purchaseVAT")), R.color.maroon1));
             dashboardItems.add(new DashboardItem("VAT Payable", formatAmount(response.optDouble("vatPayable")), R.color.maroon1));
+            dashboardItems.add(new DashboardItem("Daily Banking", formatAmount(response.optDouble("dailyBanking")), R.color.maroon));
+            dashboardItems.add(new DashboardItem("Withheld Customer", formatAmount(response.optDouble("withheldCustomer")), R.color.maroon));
+            dashboardItems.add(new DashboardItem("Withheld Supplier", formatAmount(response.optDouble("withheldSupplier")), R.color.maroon));
 
             if (response.has("computerWiseSales")) {
                 JSONArray comps = response.getJSONArray("computerWiseSales");
+                List<Map<String, String>> computerList = new ArrayList<>();
+
                 for (int i = 0; i < comps.length(); i++) {
                     JSONObject comp = comps.getJSONObject(i);
-                    dashboardItems.add(new DashboardItem(
-                            "Sales - " + comp.optString("ComputerName"),
-                            formatAmount(Double.parseDouble(comp.optString("TotalSales", "0"))),
-                            R.color.gray
-                    ));
+                    Map<String, String> map = new HashMap<>();
+                    map.put("ComputerName", comp.optString("ComputerName"));
+                    map.put("TotalSales", formatAmount(Double.parseDouble(comp.optString("TotalSales", "0"))));
+                    computerList.add(map);
                 }
+
+                DashboardItem salesCard = new DashboardItem("Sales by Computer", "", R.color.gray, true);
+                salesCard.setSubList(computerList);
+                dashboardItems.add(salesCard);
             }
 
             adapter.notifyDataSetChanged();

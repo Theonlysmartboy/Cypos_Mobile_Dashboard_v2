@@ -14,7 +14,7 @@
         android:background="@drawable/skeleton_shimmer"
         android:visibility="gone" />
 
-    <!-- 🔹 Foreground content (won’t shimmer) -->
+    <!-- Foreground content (won’t shimmer) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -144,6 +144,15 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvComputerSales"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:visibility="gone"
+            android:paddingTop="8dp" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
