@@ -3,7 +3,6 @@ package com.cybene.cyposdashboard.ui.dashboard;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -44,6 +43,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment {
+
     private EditText fromDateEditText, toDateEditText;
     private String fromDate, toDate;
     private Calendar calendar;
@@ -51,9 +51,7 @@ public class HomeFragment extends Fragment {
     private DashboardAdapter adapter;
     private List<DashboardItem> dashboardItems;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    public HomeFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,15 +102,14 @@ public class HomeFragment extends Fragment {
 
         recyclerView = root.findViewById(R.id.dashboardRecyclerView);
 
-        // Default load: past 2 years to today
+        // Default load (past 10 years)
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -2);
+        cal.add(Calendar.YEAR, -10);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String defaultFrom = sdf.format(cal.getTime());
         String defaultTo = sdf.format(new Date());
 
         setupRecycler(defaultFrom, defaultTo);
-
         return root;
     }
 
@@ -127,10 +124,7 @@ public class HomeFragment extends Fragment {
                     calendar.set(selectedYear, selectedMonth, selectedDay);
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                     targetEditText.setText(sdf.format(calendar.getTime()));
-
-                    if (targetEditText == fromDateEditText) {
-                        toDateEditText.setText("");
-                    }
+                    if (targetEditText == fromDateEditText) toDateEditText.setText("");
                 },
                 year, month, day
         );
@@ -164,7 +158,6 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         showSkeletonLoaders();
-
         fetchDashboardData(fromDate, toDate);
     }
 
@@ -207,6 +200,7 @@ public class HomeFragment extends Fragment {
                 return params;
             }
         };
+
         request.setRetryPolicy(new DefaultRetryPolicy(25000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -217,12 +211,16 @@ public class HomeFragment extends Fragment {
         try {
             dashboardItems.clear();
 
+            // 1️⃣ Total Cash Sales Card
+            DashboardItem largeCard = null;
             if (response.has("cashSale")) {
                 JSONObject cash = response.getJSONObject("cashSale");
-                DashboardItem largeCard = new DashboardItem(
+                largeCard = new DashboardItem(
                         "Total Cash Sales",
                         formatAmount(cash.optDouble("total", 0.0)),
-                        R.color.green, true);
+                        R.color.green,
+                        true
+                );
                 largeCard.setExtra("total", formatAmount(cash.optDouble("total", 0.0)));
                 largeCard.setExtra("cash", formatAmount(cash.optDouble("CS", 0.0)));
                 largeCard.setExtra("mpesa", formatAmount(cash.optDouble("MP", 0.0)));
@@ -231,6 +229,30 @@ public class HomeFragment extends Fragment {
                 dashboardItems.add(largeCard);
             }
 
+            // 2️⃣ Sales by Computer (comes right after cash sales)
+            if (response.has("computerWiseSales")) {
+                JSONArray comps = response.getJSONArray("computerWiseSales");
+                List<Map<String, String>> computerList = new ArrayList<>();
+
+                for (int i = 0; i < comps.length(); i++) {
+                    JSONObject comp = comps.getJSONObject(i);
+                    Map<String, String> map = new HashMap<>();
+                    map.put("ComputerName", comp.optString("ComputerName"));
+                    map.put("TotalSales", formatAmount(comp.optDouble("TotalSales", 0.0)));
+                    computerList.add(map);
+                }
+
+                DashboardItem compCard = new DashboardItem(
+                        "Sales by Computer",
+                        "",
+                        R.color.gray,
+                        true
+                );
+                compCard.setSubList(computerList);
+                dashboardItems.add(compCard);
+            }
+
+            // 3️⃣ Other cards
             dashboardItems.add(new DashboardItem("Invoice", formatAmount(response.optDouble("invoice")), R.color.pink));
             dashboardItems.add(new DashboardItem("Credit Note", formatAmount(response.optDouble("creditNote")), R.color.colorGoldenTainoi));
             dashboardItems.add(new DashboardItem("Purchase", formatAmount(response.optDouble("purchase")), R.color.purple1));
@@ -247,23 +269,6 @@ public class HomeFragment extends Fragment {
             dashboardItems.add(new DashboardItem("Daily Banking", formatAmount(response.optDouble("dailyBanking")), R.color.maroon));
             dashboardItems.add(new DashboardItem("Withheld Customer", formatAmount(response.optDouble("withheldCustomer")), R.color.maroon));
             dashboardItems.add(new DashboardItem("Withheld Supplier", formatAmount(response.optDouble("withheldSupplier")), R.color.maroon));
-
-            if (response.has("computerWiseSales")) {
-                JSONArray comps = response.getJSONArray("computerWiseSales");
-                List<Map<String, String>> computerList = new ArrayList<>();
-
-                for (int i = 0; i < comps.length(); i++) {
-                    JSONObject comp = comps.getJSONObject(i);
-                    Map<String, String> map = new HashMap<>();
-                    map.put("ComputerName", comp.optString("ComputerName"));
-                    map.put("TotalSales", formatAmount(Double.parseDouble(comp.optString("TotalSales", "0"))));
-                    computerList.add(map);
-                }
-
-                DashboardItem salesCard = new DashboardItem("Sales by Computer", "", R.color.gray, true);
-                salesCard.setSubList(computerList);
-                dashboardItems.add(salesCard);
-            }
 
             adapter.notifyDataSetChanged();
 
