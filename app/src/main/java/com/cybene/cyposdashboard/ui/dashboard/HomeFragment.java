@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -166,7 +167,15 @@ public class HomeFragment extends Fragment {
 
     private void showSkeletonLoaders() {
         dashboardItems.clear();
+        // Skeleton for Cash Sales (large layout)
         dashboardItems.add(new DashboardItem("Loading...", "", R.color.gray, true));
+
+        // Skeleton for Sales by Computer (computer layout)
+        DashboardItem computerSkeleton = new DashboardItem("Loading...", "", R.color.gray, true);
+        computerSkeleton.setSubList(Collections.singletonList(Collections.emptyMap())); // <-- triggers TYPE_COMPUTER
+        dashboardItems.add(computerSkeleton);
+
+        // Small cards placeholders
         for (int i = 0; i < 4; i++) {
             dashboardItems.add(new DashboardItem("Loading...", "", R.color.gray));
         }
@@ -214,7 +223,7 @@ public class HomeFragment extends Fragment {
         try {
             dashboardItems.clear();
 
-            // 1️⃣ Total Cash Sales Card
+            // 1 Total Cash Sales Card
             DashboardItem largeCard = null;
             if (response.has("cashSale")) {
                 JSONObject cash = response.getJSONObject("cashSale");
@@ -232,7 +241,7 @@ public class HomeFragment extends Fragment {
                 dashboardItems.add(largeCard);
             }
 
-            // 2️⃣ Sales by Computer (comes right after cash sales)
+            // 2 Sales by Computer (comes right after cash sales)
             if (response.has("computerWiseSales")) {
                 JSONArray comps = response.getJSONArray("computerWiseSales");
                 List<Map<String, String>> computerList = new ArrayList<>();
@@ -246,7 +255,7 @@ public class HomeFragment extends Fragment {
                 }
 
                 DashboardItem compCard = new DashboardItem(
-                        "Sales by Computer",
+                        "Total Sales by Computer",
                         "",
                         R.color.gray,
                         true
@@ -264,7 +273,7 @@ public class HomeFragment extends Fragment {
             dashboardItems.add(new DashboardItem("Goods Received BR", formatAmount(response.optDouble("goodsReceivedBR")), R.color.purple));
             dashboardItems.add(new DashboardItem("Debit Note", formatAmount(response.optDouble("debitNote")), R.color.red));
             dashboardItems.add(new DashboardItem("Stock Valuation", formatAmount(response.optDouble("stockValuation")), R.color.skyBlue));
-            dashboardItems.add(new DashboardItem("Expense", formatAmount(response.optDouble("expense")), R.color.skyBlue));
+            dashboardItems.add(new DashboardItem("Expense", formatAmount(response.optDouble("expense")), R.color.red));
             dashboardItems.add(new DashboardItem("Petty Cash", formatAmount(response.optDouble("pettyCash")), R.color.skyBlue));
             dashboardItems.add(new DashboardItem("Refund Till", formatAmount(response.optDouble("refundTill")), R.color.maroon1));
             dashboardItems.add(new DashboardItem("Purchase VAT", formatAmount(response.optDouble("purchaseVAT")), R.color.maroon1));
