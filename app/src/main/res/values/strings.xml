@@ -232,4 +232,5 @@
     <string name="productQuantity">Quantity</string>
     <string name="productPrice">Price</string>
     <string name="title">Title</string>
+    <string name="sales_by_computer">Total Sales by Computer</string>
 </resources>

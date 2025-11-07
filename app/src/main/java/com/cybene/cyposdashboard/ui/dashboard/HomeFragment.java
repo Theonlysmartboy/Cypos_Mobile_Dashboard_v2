@@ -108,6 +108,9 @@ public class HomeFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String defaultFrom = sdf.format(cal.getTime());
         String defaultTo = sdf.format(new Date());
+        // Prefill the pickers with that date
+        fromDateEditText.setText(defaultFrom);
+        toDateEditText.setText(defaultTo);
 
         setupRecycler(defaultFrom, defaultTo);
         return root;
@@ -279,6 +282,7 @@ public class HomeFragment extends Fragment {
 
     private String formatAmount(double value) {
         if (Double.isNaN(value)) value = 0.0;
-        return String.format(Locale.getDefault(), "%,.2f", value);
+        return String.format(Locale.getDefault(), "KES %,.2f", value);
     }
+
 }

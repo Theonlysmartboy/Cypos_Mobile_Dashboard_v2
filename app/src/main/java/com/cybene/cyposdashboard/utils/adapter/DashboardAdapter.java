@@ -10,17 +10,20 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.utils.items.DashboardItem;
 
 import java.util.List;
+import java.util.Map;
 
 public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_LARGE = 0;
     private static final int TYPE_SMALL = 1;
+    private static final int TYPE_COMPUTER = 2;
 
     private final Context context;
     private final List<DashboardItem> items;
@@ -32,8 +35,13 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        return items.get(position).isLargeCard() ? TYPE_LARGE : TYPE_SMALL;
+        DashboardItem item = items.get(position);
+        if (item.getSubList() != null && !item.getSubList().isEmpty()) {
+            return TYPE_COMPUTER;
+        }
+        return item.isLargeCard() ? TYPE_LARGE : TYPE_SMALL;
     }
+
 
     @NonNull
     @Override
@@ -41,7 +49,10 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (viewType == TYPE_LARGE) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_dashboard_large, parent, false);
             return new LargeCardViewHolder(view);
-        } else {
+        } else if (viewType == TYPE_COMPUTER) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_dashboard_computer_sales, parent, false);
+            return new ComputerSalesViewHolder(view);
+        }else {
             View view = LayoutInflater.from(context).inflate(R.layout.item_dashboard_card, parent, false);
             return new SmallCardViewHolder(view);
         }
@@ -64,6 +75,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (holder instanceof LargeCardViewHolder) {
             ((LargeCardViewHolder) holder).bind(item);
+        } else if (holder instanceof ComputerSalesViewHolder) {
+            ((ComputerSalesViewHolder) holder).bind(item, context);
         } else if (holder instanceof SmallCardViewHolder) {
             ((SmallCardViewHolder) holder).bind(item);
         }
@@ -110,6 +123,34 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
     }
+
+    // ----------------------------------------------------------
+    // SALES LARGE CARD VIEW HOLDER
+    // ----------------------------------------------------------
+    static class ComputerSalesViewHolder extends RecyclerView.ViewHolder {
+        TextView title;
+        RecyclerView rvComputerSales;
+
+        ComputerSalesViewHolder(@NonNull View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.largeTitle);
+            rvComputerSales = itemView.findViewById(R.id.rvComputerSales);
+        }
+
+        void bind(DashboardItem item, Context context) {
+            title.setText(item.getTitle());
+
+            List<Map<String, String>> subList = item.getSubList();
+            if (subList != null && !subList.isEmpty()) {
+                rvComputerSales.setVisibility(View.VISIBLE);
+                rvComputerSales.setLayoutManager(new LinearLayoutManager(context));
+                rvComputerSales.setAdapter(new ComputerSalesAdapter(context, subList));
+            } else {
+                rvComputerSales.setVisibility(View.GONE);
+            }
+        }
+    }
+
 
     // ----------------------------------------------------------
     // SMALL CARD VIEW HOLDER

@@ -49,7 +49,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_md"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:minHeight="48dp">
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -64,14 +65,16 @@
                     android:autofillHints="@string/date_from"
                     android:fontFamily="@font/iceland"
                     android:inputType="date"
-                    android:focusable="false"/>
+                    android:focusable="false"
+                    android:minHeight="48dp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_md"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:minHeight="48dp">
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,7 +89,8 @@
                     android:autofillHints="@string/date_to"
                     android:fontFamily="@font/iceland"
                     android:inputType="date"
-                    android:focusable="false"/>
+                    android:focusable="false"
+                    android:minHeight="48dp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
