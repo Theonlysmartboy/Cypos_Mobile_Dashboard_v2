@@ -233,4 +233,5 @@
     <string name="productPrice">Price</string>
     <string name="title">Title</string>
     <string name="sales_by_computer">Total Sales by Computer</string>
+    <string name="dashboard_detail">Dashboard Detail</string>
 </resources>

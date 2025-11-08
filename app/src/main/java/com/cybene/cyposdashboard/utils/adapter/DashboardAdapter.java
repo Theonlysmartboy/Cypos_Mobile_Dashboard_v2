@@ -27,10 +27,17 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final Context context;
     private final List<DashboardItem> items;
+    private final OnItemClickListener listener;
 
-    public DashboardAdapter(Context context, List<DashboardItem> items) {
+    // Listener interface
+    public interface OnItemClickListener {
+        void onItemClicked(String title);
+    }
+
+    public DashboardAdapter(Context context, List<DashboardItem> items, OnItemClickListener listener) {
         this.context = context;
         this.items = items;
+        this.listener = listener;
     }
 
     @Override
@@ -42,7 +49,6 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return item.isLargeCard() ? TYPE_LARGE : TYPE_SMALL;
     }
 
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,7 +58,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else if (viewType == TYPE_COMPUTER) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_dashboard_computer_sales, parent, false);
             return new ComputerSalesViewHolder(view);
-        }else {
+        } else {
             View view = LayoutInflater.from(context).inflate(R.layout.item_dashboard_card, parent, false);
             return new SmallCardViewHolder(view);
         }
@@ -90,7 +96,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     // ----------------------------------------------------------
     // LARGE CARD VIEW HOLDER (handles 5 amounts)
     // ----------------------------------------------------------
-    static class LargeCardViewHolder extends RecyclerView.ViewHolder {
+    class LargeCardViewHolder extends RecyclerView.ViewHolder {
         TextView title, totalSales, totalCash, totalMpesa, totalCreditCard, totalCheque;
         RecyclerView rvComputerSales;
 
@@ -113,11 +119,18 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             totalCheque.setText(item.getExtra("cheque"));
             totalCreditCard.setText(item.getExtra("card"));
 
+            // Click listeners for each type
+            totalCash.setOnClickListener(v -> listener.onItemClicked("Cash Sales"));
+            totalMpesa.setOnClickListener(v -> listener.onItemClicked("MPESA Sales"));
+            totalCheque.setOnClickListener(v -> listener.onItemClicked("Cheque Sales"));
+            totalCreditCard.setOnClickListener(v -> listener.onItemClicked("Card Sales"));
+            totalSales.setOnClickListener(v -> listener.onItemClicked("Total Sales"));
+
             // show nested list if available
             if (item.getSubList() != null && !item.getSubList().isEmpty()) {
                 rvComputerSales.setVisibility(View.VISIBLE);
-                rvComputerSales.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(itemView.getContext()));
-                rvComputerSales.setAdapter(new ComputerSalesAdapter(itemView.getContext(), item.getSubList()));
+                rvComputerSales.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+                rvComputerSales.setAdapter(new ComputerSalesAdapter(itemView.getContext(), item.getSubList(), listener));
             } else {
                 rvComputerSales.setVisibility(View.GONE);
             }
@@ -127,7 +140,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     // ----------------------------------------------------------
     // SALES LARGE CARD VIEW HOLDER
     // ----------------------------------------------------------
-    static class ComputerSalesViewHolder extends RecyclerView.ViewHolder {
+    class ComputerSalesViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         RecyclerView rvComputerSales;
 
@@ -144,18 +157,17 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (subList != null && !subList.isEmpty()) {
                 rvComputerSales.setVisibility(View.VISIBLE);
                 rvComputerSales.setLayoutManager(new LinearLayoutManager(context));
-                rvComputerSales.setAdapter(new ComputerSalesAdapter(context, subList));
+                rvComputerSales.setAdapter(new ComputerSalesAdapter(context, subList, listener));
             } else {
                 rvComputerSales.setVisibility(View.GONE);
             }
         }
     }
 
-
     // ----------------------------------------------------------
     // SMALL CARD VIEW HOLDER
     // ----------------------------------------------------------
-    static class SmallCardViewHolder extends RecyclerView.ViewHolder {
+    class SmallCardViewHolder extends RecyclerView.ViewHolder {
         TextView title, amount;
 
         SmallCardViewHolder(@NonNull View itemView) {
@@ -168,6 +180,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             title.setText(item.getTitle());
             amount.setText(item.getAmount());
             amount.setTextColor(ContextCompat.getColor(itemView.getContext(), item.getColorRes()));
+
+            itemView.setOnClickListener(v -> listener.onItemClicked(item.getTitle()));
         }
     }
 }

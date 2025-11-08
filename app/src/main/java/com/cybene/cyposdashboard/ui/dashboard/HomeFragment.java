@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,6 +46,7 @@ import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
+    private Spinner spinner;
     private EditText fromDateEditText, toDateEditText;
     private String fromDate, toDate;
     private Calendar calendar;
@@ -78,7 +80,7 @@ public class HomeFragment extends Fragment {
             setupRecycler(fromDate, toDate);
         });
 
-        Spinner spinner = root.findViewById(R.id.branchSelector);
+        spinner = root.findViewById(R.id.branchSelector);
         List<String> branches = new ArrayList<>();
         branches.add("Change Branch");
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -148,7 +150,16 @@ public class HomeFragment extends Fragment {
 
     private void setupRecycler(String fromDate, String toDate) {
         dashboardItems = new ArrayList<>();
-        adapter = new DashboardAdapter(requireContext(), dashboardItems);
+        adapter = new DashboardAdapter(requireContext(), dashboardItems, title -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("title", title);
+            bundle.putString("fromDate", fromDateEditText.getText().toString());
+            bundle.putString("toDate", toDateEditText.getText().toString());
+            bundle.putString("branch", spinner.getSelectedItem().toString()); // your branch spinner
+
+            NavHostFragment.findNavController(HomeFragment.this)
+                    .navigate(R.id.action_home_to_dashboardDetail, bundle);
+        });
 
         GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -164,6 +175,7 @@ public class HomeFragment extends Fragment {
         showSkeletonLoaders();
         fetchDashboardData(fromDate, toDate);
     }
+
 
     private void showSkeletonLoaders() {
         dashboardItems.clear();

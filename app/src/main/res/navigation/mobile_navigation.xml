@@ -8,7 +8,35 @@
         android:id="@+id/nav_home"
         android:name="com.cybene.cyposdashboard.ui.dashboard.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+
+        <!-- Action to Dashboard Detail -->
+        <action
+            android:id="@+id/action_home_to_dashboardDetail"
+            app:destination="@id/nav_dashboard_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_dashboard_detail"
+        android:name="com.cybene.cyposdashboard.ui.dashboard.DashboardDetailFragment"
+        android:label="Dashboard Detail"
+        tools:layout="@layout/fragment_dashboard_detail">
+
+        <!-- Arguments to pass -->
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="fromDate"
+            app:argType="string" />
+        <argument
+            android:name="toDate"
+            app:argType="string" />
+        <argument
+            android:name="branch"
+            app:argType="string" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/nav_sales"

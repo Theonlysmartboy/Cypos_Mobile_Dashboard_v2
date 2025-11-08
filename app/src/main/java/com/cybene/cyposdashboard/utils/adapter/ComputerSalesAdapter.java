@@ -18,10 +18,13 @@ public class ComputerSalesAdapter extends RecyclerView.Adapter<ComputerSalesAdap
 
     private final Context context;
     private final List<Map<String, String>> computerSales;
+    private final DashboardAdapter.OnItemClickListener listener;
 
-    public ComputerSalesAdapter(Context context, List<Map<String, String>> computerSales) {
+    public ComputerSalesAdapter(Context context, List<Map<String, String>> computerSales,
+                                DashboardAdapter.OnItemClickListener listener) {
         this.context = context;
         this.computerSales = computerSales;
+        this.listener = listener;
     }
 
     @NonNull
@@ -36,6 +39,13 @@ public class ComputerSalesAdapter extends RecyclerView.Adapter<ComputerSalesAdap
         Map<String, String> item = computerSales.get(position);
         holder.computerName.setText(item.get("ComputerName"));
         holder.totalSales.setText(item.get("TotalSales"));
+
+        // Trigger click callback when a row is clicked
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClicked(item.get("ComputerName"));
+            }
+        });
     }
 
     @Override
