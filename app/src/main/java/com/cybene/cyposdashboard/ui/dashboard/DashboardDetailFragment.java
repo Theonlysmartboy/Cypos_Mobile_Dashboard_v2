@@ -1,6 +1,7 @@
 package com.cybene.cyposdashboard.ui.dashboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
+import com.cybene.cyposdashboard.utils.items.DashboardItem;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class DashboardDetailFragment extends Fragment {
 
@@ -56,7 +69,7 @@ public class DashboardDetailFragment extends Fragment {
     // Optional: method to fetch data
     private void fetchDetailData(String title, String from, String to, String branch) {
         String url = "https://yourserver.com/api/dashboard/details?from=2016-01-06&to=2026-01-06";
-        RequestQueue queue = Volley.newRequestQueue(context);
+        RequestQueue queue = Volley.newRequestQueue(requireActivity());
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
