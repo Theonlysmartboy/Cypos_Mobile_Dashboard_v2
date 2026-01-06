@@ -1,16 +1,20 @@
 package com.cybene.cyposdashboard.ui.dashboard;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -18,12 +22,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
-import com.cybene.cyposdashboard.utils.items.DashboardItem;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Objects;
 
 public class DashboardDetailFragment extends Fragment {
 
@@ -36,6 +41,8 @@ public class DashboardDetailFragment extends Fragment {
     private String fromDate;
     private String toDate;
     private String branch;
+    private Calendar calendar;
+    private EditText fromDateEditText, toDateEditText;
 
     public DashboardDetailFragment() {}
 
@@ -60,10 +67,62 @@ public class DashboardDetailFragment extends Fragment {
             toDate = getArguments().getString("toDate");
             branch = getArguments().getString("branch");
         }
-        TextView tvTitle = root.findViewById(R.id.tvDashboardDetailTitle);
-        tvTitle.setText(title);
+        fromDateEditText = root.findViewById(R.id.fromDateEditText);
+        toDateEditText = root.findViewById(R.id.toDateEditText);
+        calendar = Calendar.getInstance();
+        // Set the passed dates in the EditText fields
+        fromDateEditText.setText(fromDate);
+        toDateEditText.setText(toDate);
+        // Set the title in the toolbar
+            setToolbarTitle(title);
+        fromDateEditText.setOnClickListener(v -> showDatePicker(fromDateEditText));
+        toDateEditText.setOnClickListener(v -> showDatePicker(toDateEditText));
+
+        Button refreshButton = root.findViewById(R.id.refreshButton);
+        refreshButton.setOnClickListener(v -> {
+            fromDate = fromDateEditText.getText().toString().trim();
+            toDate = toDateEditText.getText().toString().trim();
+
+            if (fromDate.isEmpty() || toDate.isEmpty()) {
+                Toast.makeText(requireContext(), "Please select both From and To dates", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            fetchDetailData(title,fromDate, toDate,branch);
+        });
         fetchDetailData(title, fromDate, toDate, branch);
         return root;
+    }
+    private void setToolbarTitle(String title) {
+        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+        if (activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setTitle(title);
+        }
+    }
+
+    private void showDatePicker(EditText targetEditText) {
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    calendar.set(selectedYear, selectedMonth, selectedDay);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    targetEditText.setText(sdf.format(calendar.getTime()));
+                    if (targetEditText == fromDateEditText) toDateEditText.setText("");
+                }, year, month, day);
+
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+
+        if (targetEditText == toDateEditText && !fromDateEditText.getText().toString().isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                calendar.setTime(Objects.requireNonNull(sdf.parse(fromDateEditText.getText().toString())));
+                datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+            } catch (Exception ignored) {}
+        }
+        datePickerDialog.show();
     }
 
     // Optional: method to fetch data
@@ -74,24 +133,23 @@ public class DashboardDetailFragment extends Fragment {
                 Request.Method.GET,
                 url,
                 null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            List<DashboardItem> items = parseDashboardResponse(response);
-                            adapter.updateItems(items);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                response -> {
+                    /*try {
+                        List<DashboardItem> items = parseDashboardResponse(response);
+                        adapter.updateItems(items);
+                    } catch (JSONException e) {
+                        Log.e("Dashboard", "Error parsing response", e);
+                        Toast.makeText(requireActivity(), "Error parsing data", Toast.LENGTH_SHORT).show();
+                    }*/
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Dashboard", "Failed to load: " + error.getMessage());
-                    }
+                error -> {
+                    Log.e("Dashboard", "Failed to load: " + error.getMessage());
+                    Toast.makeText(requireActivity(), "Failed to load data", Toast.LENGTH_SHORT).show();
                 }
         );
+        request.setRetryPolicy(new DefaultRetryPolicy(25000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
 }

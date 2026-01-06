@@ -105,11 +105,9 @@ public class HomeFragment extends Fragment {
 
         recyclerView = root.findViewById(R.id.dashboardRecyclerView);
 
-        // Default load (past 10 years)
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -10);
+        // Set default dates
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String defaultFrom = sdf.format(cal.getTime());
+        String defaultFrom = sdf.format(new Date());
         String defaultTo = sdf.format(new Date());
         // Prefill the pickers with that date
         fromDateEditText.setText(defaultFrom);
@@ -118,22 +116,18 @@ public class HomeFragment extends Fragment {
         setupRecycler(defaultFrom, defaultTo);
         return root;
     }
-
     private void showDatePicker(EditText targetEditText) {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                requireContext(),
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
                 (view, selectedYear, selectedMonth, selectedDay) -> {
                     calendar.set(selectedYear, selectedMonth, selectedDay);
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                     targetEditText.setText(sdf.format(calendar.getTime()));
                     if (targetEditText == fromDateEditText) toDateEditText.setText("");
-                },
-                year, month, day
-        );
+                }, year, month, day);
 
         datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
 
@@ -144,10 +138,8 @@ public class HomeFragment extends Fragment {
                 datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
             } catch (Exception ignored) {}
         }
-
         datePickerDialog.show();
     }
-
     private void setupRecycler(String fromDate, String toDate) {
         dashboardItems = new ArrayList<>();
         adapter = new DashboardAdapter(requireContext(), dashboardItems, title -> {
@@ -175,8 +167,6 @@ public class HomeFragment extends Fragment {
         showSkeletonLoaders();
         fetchDashboardData(fromDate, toDate);
     }
-
-
     private void showSkeletonLoaders() {
         dashboardItems.clear();
         // Skeleton for Cash Sales (large layout)
@@ -193,29 +183,25 @@ public class HomeFragment extends Fragment {
         }
         adapter.notifyDataSetChanged();
     }
-
     private void fetchDashboardData(String fromDate, String toDate) {
         String url = AppConfig.URL_DASHBOARD;
         RequestQueue queue = Volley.newRequestQueue(requireContext());
 
-        StringRequest request = new StringRequest(
-                Request.Method.POST,
-                url,
-                response -> {
-                    Log.d("Dashboard", "Response: " + response);
-                    try {
-                        JSONObject json = new JSONObject(response);
-                        parseDashboardData(json);
-                    } catch (Exception e) {
-                        Log.e("Dashboard", "Error parsing response", e);
-                        Toast.makeText(requireContext(), "Error parsing data", Toast.LENGTH_SHORT).show();
-                    }
-                },
-                error -> {
-                    Log.e("Dashboard", "Network error fetching data", error);
-                    Toast.makeText(requireContext(), "Network error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+        StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
+                Log.d("Dashboard", "Response: " + response);
+                try {
+                    JSONObject json = new JSONObject(response);
+                    parseDashboardData(json);
+                } catch (Exception e) {
+                    Log.e("Dashboard", "Error parsing response", e);
+                    Toast.makeText(requireContext(), "Error parsing data", Toast.LENGTH_SHORT).show();
                 }
-        ) {
+            },
+                error -> {
+            Log.e("Dashboard", "Network error fetching data", error);
+            Toast.makeText(requireContext(), "Network error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                })
+        {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -230,7 +216,6 @@ public class HomeFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
     }
-
     private void parseDashboardData(JSONObject response) {
         try {
             dashboardItems.clear();
@@ -300,10 +285,8 @@ public class HomeFragment extends Fragment {
             Log.e("Dashboard", "Error parsing dashboard data", e);
         }
     }
-
     private String formatAmount(double value) {
         if (Double.isNaN(value)) value = 0.0;
         return String.format(Locale.getDefault(), "KES %,.2f", value);
     }
-
 }

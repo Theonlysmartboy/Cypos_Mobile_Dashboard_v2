@@ -1,18 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="8dp">
 
-    <TextView
-        android:id="@+id/tvDashboardDetailTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dashboard_detail"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:paddingBottom="8dp"/>
+        android:orientation="vertical">
+        <!-- Date Range Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
 
-    <!-- You can add a RecyclerView here for detailed items -->
-</LinearLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_md"
+                android:layout_weight="1"
+                android:minHeight="48dp">
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fromDateEditText"
+                    android:hint="@string/date_from"
+                    android:shadowRadius="10"
+                    android:ems="10"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:drawablePadding="@dimen/margin"
+                    android:drawableStart="@drawable/ic_baseline_calendar_today_24"
+                    android:autofillHints="@string/date_from"
+                    android:fontFamily="@font/iceland"
+                    android:inputType="date"
+                    android:focusable="false"
+                    android:minHeight="48dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_md"
+                android:layout_weight="1"
+                android:minHeight="48dp">
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/toDateEditText"
+                    android:hint="@string/date_to"
+                    android:shadowRadius="10"
+                    android:ems="10"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:drawablePadding="@dimen/margin"
+                    android:drawableStart="@drawable/ic_baseline_calendar_today_24"
+                    android:autofillHints="@string/date_to"
+                    android:fontFamily="@font/iceland"
+                    android:inputType="date"
+                    android:focusable="false"
+                    android:minHeight="48dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/refreshButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/refresh"
+                android:background="@drawable/rounded_yellow_button"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+        <!-- Recycler View -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dashboardDetailsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_dashboard_card" />
+
+    </LinearLayout>
+</ScrollView>
+
