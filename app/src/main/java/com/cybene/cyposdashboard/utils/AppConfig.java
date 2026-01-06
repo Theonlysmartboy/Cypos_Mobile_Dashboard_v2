@@ -8,6 +8,7 @@ public class AppConfig {
     public static final String URL_PASSWORD_RESET= BASE_URL+"/cyposbackend/controller/auth/PasswordResetController.php";
     public static final String URL_RECOVER_PASSWORD= BASE_URL+"/cyposbackend/controller/auth/LoginController.php";
     public static final String URL_DASHBOARD = BASE_URL+"/cyposbackend/controller/dashboard/DashboardController.php";
+    public static final String URL_DASHBOARD_DETAIL = BASE_URL+"/cyposbackend/controller/dashboard/DashboardDetailController.php";
     public static final String URL_INVOICE_LIST = BASE_URL+"/cyposbackend/controller/sales/InvoiceListController.php";
     public static final String URL_TILL_CASH_PICKUP = BASE_URL+"/cyposbackend/controller/sales/TillCashPickUpController.php";
     public static final String URL_CASH_SALE_MODE = BASE_URL+"/cyposbackend/controller/sales/CashSalePaymentModeController.php";

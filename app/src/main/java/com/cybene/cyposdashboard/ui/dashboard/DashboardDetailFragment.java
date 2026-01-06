@@ -17,13 +17,10 @@ import androidx.fragment.app.Fragment;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
-
-import org.json.JSONObject;
+import com.cybene.cyposdashboard.utils.AppConfig;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -58,8 +55,7 @@ public class DashboardDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard_detail, container, false);
         if (getArguments() != null) {
             title = getArguments().getString("title");
@@ -127,10 +123,10 @@ public class DashboardDetailFragment extends Fragment {
 
     // Optional: method to fetch data
     private void fetchDetailData(String title, String from, String to, String branch) {
-        String url = "https://yourserver.com/api/dashboard/details?from=2016-01-06&to=2026-01-06";
+        String url = AppConfig.URL_DASHBOARD_DETAIL;
         RequestQueue queue = Volley.newRequestQueue(requireActivity());
         JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET,
+                Request.Method.POST,
                 url,
                 null,
                 response -> {
