@@ -46,21 +46,39 @@ public class DashboardDetailFragment extends Fragment {
             fromDate = getArguments().getString("fromDate");
             toDate = getArguments().getString("toDate");
             branch = getArguments().getString("branch");
-
-            // Now you can use these to fetch details from your API
         }
-        // Example: display the title at the top
         TextView tvTitle = root.findViewById(R.id.tvDashboardDetailTitle);
         tvTitle.setText(title);
-
-        // You can now also use fromDate, toDate, and branch to fetch data
-        // e.g., fetchDetailData(title, fromDate, toDate, branch);
-
+        fetchDetailData(title, fromDate, toDate, branch);
         return root;
     }
 
     // Optional: method to fetch data
     private void fetchDetailData(String title, String from, String to, String branch) {
-        // Use Volley or Retrofit to fetch detail data using the filters
+        String url = "https://yourserver.com/api/dashboard/details?from=2016-01-06&to=2026-01-06";
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            List<DashboardItem> items = parseDashboardResponse(response);
+                            adapter.updateItems(items);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Dashboard", "Failed to load: " + error.getMessage());
+                    }
+                }
+        );
+        queue.add(request);
     }
 }
