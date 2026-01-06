@@ -110,7 +110,6 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             totalCheque = itemView.findViewById(R.id.totalChequeAmount);
             rvComputerSales = itemView.findViewById(R.id.rvComputerSales);
         }
-
         void bind(DashboardItem item) {
             title.setText(item.getTitle());
             totalSales.setText(item.getExtra("total"));
@@ -136,7 +135,6 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
     }
-
     // ----------------------------------------------------------
     // SALES LARGE CARD VIEW HOLDER
     // ----------------------------------------------------------
@@ -163,7 +161,6 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
     }
-
     // ----------------------------------------------------------
     // SMALL CARD VIEW HOLDER
     // ----------------------------------------------------------
@@ -175,7 +172,6 @@ public class DashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             title = itemView.findViewById(R.id.cardTitle);
             amount = itemView.findViewById(R.id.cardAmount);
         }
-
         void bind(DashboardItem item) {
             title.setText(item.getTitle());
             amount.setText(item.getAmount());
