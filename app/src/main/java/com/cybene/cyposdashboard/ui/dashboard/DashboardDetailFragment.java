@@ -13,18 +13,30 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.utils.AppConfig;
+import com.cybene.cyposdashboard.utils.adapter.DashboardDetailAdapter;
+import com.cybene.cyposdashboard.utils.items.DashboardDetailItem;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 public class DashboardDetailFragment extends Fragment {
@@ -40,6 +52,9 @@ public class DashboardDetailFragment extends Fragment {
     private String branch;
     private Calendar calendar;
     private EditText fromDateEditText, toDateEditText;
+    private Button refreshButton;
+    private RecyclerView recyclerView;
+    private DashboardDetailAdapter adapter;
 
     public DashboardDetailFragment() {}
 
@@ -58,23 +73,29 @@ public class DashboardDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard_detail, container, false);
         if (getArguments() != null) {
-            title = getArguments().getString("title");
-            fromDate = getArguments().getString("fromDate");
-            toDate = getArguments().getString("toDate");
-            branch = getArguments().getString("branch");
+            title = getArguments().getString(ARG_TITLE);
+            fromDate = getArguments().getString(ARG_FROM);
+            toDate = getArguments().getString(ARG_TO);
+            branch = getArguments().getString(ARG_BRANCH);
         }
         fromDateEditText = root.findViewById(R.id.fromDateEditText);
         toDateEditText = root.findViewById(R.id.toDateEditText);
         calendar = Calendar.getInstance();
+        recyclerView = root.findViewById(R.id.dashboardDetailsRecyclerView);
+        
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        adapter = new DashboardDetailAdapter(requireContext(), new ArrayList<>());
+        recyclerView.setAdapter(adapter);
+
         // Set the passed dates in the EditText fields
         fromDateEditText.setText(fromDate);
         toDateEditText.setText(toDate);
-        // Set the title in the toolbar
-            setToolbarTitle(title);
+        
+        setToolbarTitle(title);
         fromDateEditText.setOnClickListener(v -> showDatePicker(fromDateEditText));
         toDateEditText.setOnClickListener(v -> showDatePicker(toDateEditText));
 
-        Button refreshButton = root.findViewById(R.id.refreshButton);
+        refreshButton = root.findViewById(R.id.refreshButton);
         refreshButton.setOnClickListener(v -> {
             fromDate = fromDateEditText.getText().toString().trim();
             toDate = toDateEditText.getText().toString().trim();
@@ -84,9 +105,10 @@ public class DashboardDetailFragment extends Fragment {
                 return;
             }
 
-            fetchDetailData(title,fromDate, toDate,branch);
+            fetchDetailData(recyclerView, title, fromDate, toDate, branch);
         });
-        fetchDetailData(title, fromDate, toDate, branch);
+        
+        fetchDetailData(recyclerView, title, fromDate, toDate, branch);
         return root;
     }
     private void setToolbarTitle(String title) {
@@ -121,31 +143,66 @@ public class DashboardDetailFragment extends Fragment {
         datePickerDialog.show();
     }
 
-    // Optional: method to fetch data
-    private void fetchDetailData(String title, String from, String to, String branch) {
+    private void fetchDetailData(RecyclerView recyclerView, String title, String from, String to, String branch) {
         String url = AppConfig.URL_DASHBOARD_DETAIL;
         RequestQueue queue = Volley.newRequestQueue(requireActivity());
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST,
-                url,
-                null,
-                response -> {
-                    /*try {
-                        List<DashboardItem> items = parseDashboardResponse(response);
-                        adapter.updateItems(items);
-                    } catch (JSONException e) {
-                        Log.e("Dashboard", "Error parsing response", e);
-                        Toast.makeText(requireActivity(), "Error parsing data", Toast.LENGTH_SHORT).show();
-                    }*/
-                },
-                error -> {
-                    Log.e("Dashboard", "Failed to load: " + error.getMessage());
-                    Toast.makeText(requireActivity(), "Failed to load data", Toast.LENGTH_SHORT).show();
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+            response -> {
+                Log.d("fetchDetailData: ", "Response: " + response);
+                try {
+                    JSONObject json = new JSONObject(response);
+                    List<DashboardDetailItem> items = parseDashboardResponse(json);
+                    adapter.updateItems(items);
+                    adapter.notifyDataSetChanged();
+                    recyclerView.setAdapter(adapter);
+                } catch (JSONException e) {
+                    Log.e("Dashboard", "Error parsing response", e);
+                    Toast.makeText(requireActivity(), "Error parsing data", Toast.LENGTH_SHORT).show();
                 }
-        );
+            },
+            error -> {
+                Log.e("Dashboard", "Failed to load: " + error.getMessage());
+                Toast.makeText(requireActivity(), "Failed to load data", Toast.LENGTH_SHORT).show();
+            }
+        ){
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("title", title);
+                params.put("from_date", from);
+                params.put("to_date", to);
+                params.put("branch", branch);
+                return params;
+            }
+        };
         request.setRetryPolicy(new DefaultRetryPolicy(25000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
+    }
+    private List<DashboardDetailItem> parseDashboardResponse(JSONObject response) throws JSONException {
+        List<DashboardDetailItem> list = new ArrayList<>();
+        if (response.has("data")) {
+            JSONArray dataArray = response.getJSONArray("data");
+            for (int i = 0; i < dataArray.length(); i++) {
+                JSONObject obj = dataArray.getJSONObject(i);
+                String itemTitle = obj.optString("title", "N/A");
+                double itemAmount = Double.parseDouble(obj.optString("amount", "0.00"));
+                int itemColor;
+                if(Double.isNaN(itemAmount)) {
+                    itemColor = R.color.black;
+                } else if (itemAmount == 0.00) {
+                    itemColor = R.color.black;
+                } else if (itemAmount<0) {
+                    itemColor = R.color.red;
+                }else{
+                    itemColor = R.color.green;
+                }
+                list.add(new DashboardDetailItem(itemTitle, itemAmount, itemColor));
+            }
+        } else if (response.has("error")) {
+            Toast.makeText(requireActivity(), response.getString("error_msg"), Toast.LENGTH_SHORT).show();
+        }
+        return list;
     }
 }
