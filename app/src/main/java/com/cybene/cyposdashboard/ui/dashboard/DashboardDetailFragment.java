@@ -142,7 +142,6 @@ public class DashboardDetailFragment extends Fragment {
         }
         datePickerDialog.show();
     }
-
     private void fetchDetailData(RecyclerView recyclerView, String title, String from, String to, String branch) {
         String url = AppConfig.URL_DASHBOARD_DETAIL;
         RequestQueue queue = Volley.newRequestQueue(requireActivity());
