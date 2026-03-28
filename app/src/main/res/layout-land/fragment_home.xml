@@ -29,7 +29,7 @@
                 android:textColor="#FFFFFF" />
             <Spinner
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:gravity="end"
                 android:id="@+id/branchSelector"/>
@@ -52,7 +52,7 @@
                 android:layout_weight="1">
                 <EditText
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:id="@+id/fromDateEditText"
                     android:hint="@string/date_from"
                     android:shadowRadius="10"
@@ -74,7 +74,7 @@
                 android:layout_weight="1">
                 <EditText
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:id="@+id/toDateEditText"
                     android:hint="@string/date_to"
                     android:shadowRadius="10"
@@ -96,7 +96,8 @@
                 android:layout_weight="1"
                 android:text="@string/refresh"
                 android:background="@drawable/rounded_yellow_button"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:maxWidth="320dp"/>
         </LinearLayout>
 
         <!-- Dashboard Layout -->

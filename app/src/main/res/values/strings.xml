@@ -198,7 +198,7 @@
     <string name="goods_received_from_branch">Goods Received From Branch</string>
     <string name="from_date">From Date</string>
     <string name="to_date">To Date</string>
-    <string name="refresh">Refresh</string>
+    <string name="refresh">Filter</string>
     <string name="total_cash_sales">Total Cash Sales</string>
     <string name="total_sales_0_00">Total Sales: 0.00</string>
     <string name="cash_sales_0_00">CashSales: 0.00\n</string>
