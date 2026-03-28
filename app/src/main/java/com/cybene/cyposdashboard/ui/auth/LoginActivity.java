@@ -51,7 +51,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     AutoCompleteTextView email;
     EditText password;
     CheckBox remember;
-    ImageView view;
     androidx.constraintlayout.widget.ConstraintLayout container;
     private SharedPrefs session;
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -93,7 +92,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         password = findViewById(R.id.txtPass);
         remember = findViewById(R.id.rememberMe);
         container = findViewById(R.id.container);
-        view = findViewById(R.id.view);
         myDb = new Db(this);
         session = new SharedPrefs(getApplicationContext());
         trailingCircularDotsLoader = new TrailingDotsLoader(this);
@@ -113,7 +111,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         reset.setOnClickListener(this);
         login.setOnClickListener(this);
         remember.setOnClickListener(this);
-        view.setOnClickListener(this);
     }
 
     /**
@@ -134,17 +131,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String passwordVal = password.getText().toString().trim();
             if(validateInput(emailVal, passwordVal)){
                 auth(emailVal,passwordVal);
-            }
-        }else {
-            if(password.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
-                ((ImageView)(view)).setImageResource(R.drawable.ic_visibility_off);
-                //Show Password
-                password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            }
-            else{
-                ((ImageView)(view)).setImageResource(R.drawable.ic_visibility);
-                //Hide Password
-                password.setTransformationMethod(PasswordTransformationMethod.getInstance());
             }
         }
     }

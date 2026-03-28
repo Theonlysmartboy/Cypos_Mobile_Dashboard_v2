@@ -19,7 +19,7 @@
                     <padding android:bottom="5dp"/>
                     <gradient
                         android:startColor="@color/colorPrimary"
-                        android:endColor="@color/colorPrimaryDark"
+                        android:endColor="@color/honeydew"
                         android:angle="270" />
                     <corners
                         android:radius="19dp"/>
@@ -48,7 +48,7 @@
                 <shape>
                     <padding android:bottom="5dp"/>
                     <gradient
-                        android:startColor="@color/colorPrimaryDark"
+                        android:startColor="@color/honeydew"
                         android:endColor="@color/colorPrimary"
                         android:angle="270" />
                     <corners

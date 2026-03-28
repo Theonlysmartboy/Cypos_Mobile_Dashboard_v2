@@ -50,16 +50,15 @@ public class Db extends SQLiteOpenHelper {
         added= result != -1;
         return added;
     }
-    public boolean storeUser( String uid, String name, String email){
-        boolean added;
+    public boolean storeUser(String uid, String name, String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValue = new ContentValues();
-        contentValue.put("id",uid);
-        contentValue.put("name",name);
-        contentValue.put("email",email);
-        long result = db.insert("tbl_users",null,contentValue);
-        added= result != -1;
-        return added;
+        contentValue.put("id", uid);
+        contentValue.put("name", name);
+        contentValue.put("email", email);
+        long result = db.insertWithOnConflict("tbl_users",null,
+                contentValue, SQLiteDatabase.CONFLICT_REPLACE);
+        return result != -1;
     }
     public HashMap<String, String> getConfig() {
         HashMap<String, String> path = new HashMap<>();
