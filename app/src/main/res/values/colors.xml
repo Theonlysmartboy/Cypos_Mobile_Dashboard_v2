@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#336699</color>
-    <color name="colorPrimaryDark">#003366</color>
+    <color name="colorPrimary">#008080</color>
+    <color name="colorPrimaryDark">#0E9FBA</color>
     <color name="colorAccent">#336699</color>
     <color name="colorGoldenTainoi">#FFCC66</color>
     <color name="GoldenTainoi">#FF4500</color>
@@ -22,6 +22,7 @@
     <color name="brown1">#1c0a0a</color>
     <color name="green1">#0f5928</color>
     <color name="blue1">#0f1059</color>
+    <color name="honeydew">#F0FFF0</color>
 
     <color name="card_green_bg">#E8F5E9</color>
     <color name="text_primary">#212121</color>

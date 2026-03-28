@@ -82,32 +82,25 @@ public class DashboardDetailFragment extends Fragment {
         toDateEditText = root.findViewById(R.id.toDateEditText);
         calendar = Calendar.getInstance();
         recyclerView = root.findViewById(R.id.dashboardDetailsRecyclerView);
-        
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new DashboardDetailAdapter(requireContext(), new ArrayList<>());
         recyclerView.setAdapter(adapter);
-
         // Set the passed dates in the EditText fields
         fromDateEditText.setText(fromDate);
         toDateEditText.setText(toDate);
-        
         setToolbarTitle(title);
         fromDateEditText.setOnClickListener(v -> showDatePicker(fromDateEditText));
         toDateEditText.setOnClickListener(v -> showDatePicker(toDateEditText));
-
         refreshButton = root.findViewById(R.id.refreshButton);
         refreshButton.setOnClickListener(v -> {
             fromDate = fromDateEditText.getText().toString().trim();
             toDate = toDateEditText.getText().toString().trim();
-
             if (fromDate.isEmpty() || toDate.isEmpty()) {
                 Toast.makeText(requireContext(), "Please select both From and To dates", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             fetchDetailData(recyclerView, title, fromDate, toDate, branch);
         });
-        
         fetchDetailData(recyclerView, title, fromDate, toDate, branch);
         return root;
     }
@@ -122,7 +115,6 @@ public class DashboardDetailFragment extends Fragment {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-
         DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
                 (view, selectedYear, selectedMonth, selectedDay) -> {
                     calendar.set(selectedYear, selectedMonth, selectedDay);
@@ -130,9 +122,7 @@ public class DashboardDetailFragment extends Fragment {
                     targetEditText.setText(sdf.format(calendar.getTime()));
                     if (targetEditText == fromDateEditText) toDateEditText.setText("");
                 }, year, month, day);
-
         datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-
         if (targetEditText == toDateEditText && !fromDateEditText.getText().toString().isEmpty()) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -145,7 +135,6 @@ public class DashboardDetailFragment extends Fragment {
     private void fetchDetailData(RecyclerView recyclerView, String title, String from, String to, String branch) {
         String url = AppConfig.URL_DASHBOARD_DETAIL;
         RequestQueue queue = Volley.newRequestQueue(requireActivity());
-
         StringRequest request = new StringRequest(Request.Method.POST, url,
             response -> {
                 Log.d("fetchDetailData: ", "Response: " + response);

@@ -19,7 +19,7 @@
         android:contentDescription="@string/logo" />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout_email"
-        android:layout_marginEnd="@dimen/margin"
+        android:layout_margin="@dimen/margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/lLogo"
@@ -40,18 +40,17 @@
         android:autofillHints="@string/user_name"
         android:inputType="textAutoComplete|textAutoCorrect|textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
-    <LinearLayout
-        android:id="@+id/input_layout_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/input_layout_email"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/rememberMe">
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_email"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/rememberMe"
+        app:endIconMode="password_toggle"
+        android:layout_margin="@dimen/activity_horizontal_margin">
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,14 +65,7 @@
                 android:autofillHints="@string/password"
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/view"
-            android:src="@drawable/ic_visibility"
-            android:layout_marginBottom="-200dp"
-            android:layout_marginStart="-20dp"/>
-    </LinearLayout>
+
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -99,8 +91,7 @@
         android:background="@drawable/rounded_button"
         android:textColor="@color/white"
         android:text="@string/sign_in"
-        android:drawablePadding="@dimen/margin"
-        android:drawableStart="@drawable/ic_baseline_lock_open" />
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
