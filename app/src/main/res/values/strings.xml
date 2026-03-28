@@ -198,7 +198,7 @@
     <string name="goods_received_from_branch">Goods Received From Branch</string>
     <string name="from_date">From Date</string>
     <string name="to_date">To Date</string>
-    <string name="refresh">Refresh</string>
+    <string name="refresh">Filter</string>
     <string name="total_cash_sales">Total Cash Sales</string>
     <string name="total_sales_0_00">Total Sales: 0.00</string>
     <string name="cash_sales_0_00">CashSales: 0.00\n</string>
@@ -213,7 +213,7 @@
     <string name="total_sales">Total Sales:</string>
     <string name="cash_sales">Cash Sales:</string>
     <string name="cheque">Cheque:</string>
-    <string name="kanyauyoma_traders">KANYAUYOMA TRADERS</string>
+    <string name="kanyauyoma_traders">ADISHAKTI LTD</string>
     <string name="total_goods_returned">Total Goods Returned</string>
     <string name="total_credit_note">Total Credit Note</string>
     <string name="vat_withheld_customer">VAT Withheld Customer</string>

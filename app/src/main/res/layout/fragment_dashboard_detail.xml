@@ -73,7 +73,8 @@
                 android:layout_weight="1"
                 android:text="@string/refresh"
                 android:background="@drawable/rounded_yellow_button"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:maxWidth="320dp"/>
         </LinearLayout>
         <!-- Recycler View -->
         <androidx.recyclerview.widget.RecyclerView
@@ -86,4 +87,3 @@
 
     </LinearLayout>
 </ScrollView>
-

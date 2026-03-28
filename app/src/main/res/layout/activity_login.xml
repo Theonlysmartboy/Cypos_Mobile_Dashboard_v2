@@ -103,7 +103,8 @@
         android:text="@string/sign_up_info"
         android:textColor="@color/colorPrimary"
         android:layout_margin="@dimen/margin_sm"
-        android:textSize="20sp"  />
+        android:textSize="20sp"
+        android:visibility="gone"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
