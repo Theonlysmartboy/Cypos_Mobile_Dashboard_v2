@@ -19,14 +19,22 @@
         android:layout_marginEnd="@dimen/margin"
         android:contentDescription="@string/cybene_technologies_ltd" />
     <com.cybene.cyposdashboard.utils.TrailingDotsLoader
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:id="@+id/progress"
+        android:layout_margin="20dp"
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true"
         app:layout_constraintTop_toBottomOf="@+id/logo"
-        app:layout_constraintBottom_toTopOf="@+id/provider"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/provider"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="@dimen/margin"
+        app:dotCount="10"
+        app:dotRadius="5dp"
+        app:circleRadius="20dp"
+        app:primaryColor="@color/colorPrimary"
+        app:secondaryColor="@color/colorPrimary"
+        app:animationDuration="800"
         />
     <ImageView
         android:layout_width="wrap_content"

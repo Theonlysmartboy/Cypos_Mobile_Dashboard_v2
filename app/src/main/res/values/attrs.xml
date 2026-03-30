@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TrailingDotsLoader">
+        <attr name="dotCount" format="integer" />
+        <attr name="dotRadius" format="dimension" />
+        <attr name="circleRadius" format="dimension" />
+        <attr name="primaryColor" format="color" />
+        <attr name="secondaryColor" format="color" />
+        <attr name="animationDuration" format="integer" />
+    </declare-styleable>
+</resources>
