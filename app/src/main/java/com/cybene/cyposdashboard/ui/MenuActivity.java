@@ -58,14 +58,37 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
         }
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home,
-                R.id.nav_sales, R.id.nav_purchase, R.id.nav_inventory, R.id.nav_accounts, R.id.nav_branch, R.id.nav_customer,R.id.nav_supplier)
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_sales,
+                R.id.nav_purchase, R.id.nav_inventory, R.id.nav_accounts, R.id.nav_branch,
+                R.id.nav_customer, R.id.nav_supplier, R.id.nav_profile, R.id.nav_settings,
+                R.id.nav_logout)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_logout) {
+                SharedPrefs.getInstance().saveBoolean("isLoggedIn", false);
+                myDb.deleteUser();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_settings) {
+                Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show();
+                return true;
+            } else if (id == R.id.nav_profile) {
+                startActivity(new Intent(this, PasswordResetActivity.class));
+                return true;
+            } else {
+                boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
+                if (handled) {
+                    drawer.closeDrawers();
+                }
+                return handled;
+            }
+        });
     }
 
     @Override
@@ -85,11 +108,8 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
             startActivity(profile);
             return true;
         } else if (item.getItemId() == R.id.action_logout) {
-            //restore prefs
-            SharedPrefs.getInstance().saveString("isLoggedIn", "");
-            //delete user from sync db
+            SharedPrefs.getInstance().saveBoolean("isLoggedIn", false);
             myDb.deleteUser();
-            //move app to login
             Intent Main = new Intent(MenuActivity.this, LoginActivity.class);
             startActivity(Main);
             finish();

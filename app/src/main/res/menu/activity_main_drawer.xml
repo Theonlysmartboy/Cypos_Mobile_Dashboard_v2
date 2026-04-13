@@ -2,13 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
-    <group android:checkableBehavior="single">
+    <item
+        android:title="@string/main"
+        android:enabled="false" />
+    <group android:checkableBehavior="single"
+        android:id="@+id/main_group">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
             android:title="@string/menu_home" />
-        <item
+        <!--item
             android:id="@+id/nav_sales"
             android:icon="@drawable/ic_sale"
             android:title="@string/monthlySales" />
@@ -43,6 +46,36 @@
         <item
             android:id="@+id/nav_supplier"
             android:icon="@drawable/ic_dashboard"
-            android:title="@string/supplier_dashboard" />
+            android:title="@string/supplier_dashboard" /-->
+    </group>
+    <!-- ===== ACCOUNT ===== -->
+    <item
+        android:title="@string/account"
+        android:enabled="false" />
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/account_group">
+        <item
+            android:id="@+id/nav_profile"
+            android:title="@string/profile"
+            android:icon="@drawable/ic_baseline_co_present_24" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:title="@string/settings"
+            android:icon="@drawable/ic_baseline_settings_24" />
+    </group>
+
+    <!-- ===== SESSION ===== -->
+    <item
+        android:title="@string/session"
+        android:enabled="false" />
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/session_group">
+        <item
+            android:id="@+id/nav_logout"
+            android:title="@string/logout"
+            android:icon="@drawable/ic_baseline_logout_24" />
     </group>
 </menu>

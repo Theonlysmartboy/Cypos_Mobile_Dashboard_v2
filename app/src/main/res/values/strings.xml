@@ -234,4 +234,9 @@
     <string name="title">Title</string>
     <string name="sales_by_computer">Total Sales by Computer</string>
     <string name="dashboard_detail">Dashboard Detail</string>
+    <string name="main">Main</string>
+    <string name="session">Session</string>
+    <string name="account">My Account</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Settings</string>
 </resources>
