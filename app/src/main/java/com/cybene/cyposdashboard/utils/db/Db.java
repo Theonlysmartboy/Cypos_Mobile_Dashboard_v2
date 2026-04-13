@@ -63,7 +63,6 @@ public class Db extends SQLiteOpenHelper {
     public HashMap<String, String> getConfig() {
         HashMap<String, String> path = new HashMap<>();
         String selectQuery = "SELECT * from tbl_config";
-
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // Move to first row
