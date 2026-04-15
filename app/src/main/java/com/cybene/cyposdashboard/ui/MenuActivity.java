@@ -30,7 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallbacks {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private static int count= Integer.parseInt(SharedPrefs.getInstance().getString("notification_content"));
+    private static final int count= Integer.parseInt(SharedPrefs.getInstance().getString("notification_content"));
     private Db myDb;
     TextView name, email;
 
@@ -96,12 +96,16 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
         MenuItem menuItem = menu.findItem(R.id.action_notifications);
-        menuItem.setIcon(Converter.convertLayoutToImage(MenuActivity.this,0,R.drawable.ic_baseline_notifications));
+        int unreadCount = myDb.getUnreadCount();
+        menuItem.setIcon(Converter.convertLayoutToImage(MenuActivity.this, unreadCount, R.drawable.ic_baseline_notifications));
 
         return true;
     }
+
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_notifications){
+        if (item.getItemId() == R.id.action_notifications) {
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            navController.navigate(R.id.nav_notifications);
             return true;
         } else if (item.getItemId() == R.id.action_profile) {
             Intent profile = new Intent(MenuActivity.this, PasswordResetActivity.class);
@@ -131,9 +135,6 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
 
     @Override
     public void onNewNotificationReceived() {
-        count= Integer.parseInt(SharedPrefs.getInstance().getString("notification_content"));
-        count++;
-        SharedPrefs.getInstance().saveString("notification_content", String.valueOf(count));
         invalidateOptionsMenu();
         Snackbar.make(findViewById(R.id.parentContainer), "You have a new Notification !!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
@@ -141,9 +142,6 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
 
     @Override
     public void onReadNotification() {
-        count= Integer.parseInt(SharedPrefs.getInstance().getString("notification_content"));
-        count--;
-        SharedPrefs.getInstance().saveString("notification_content", String.valueOf(count));
         invalidateOptionsMenu();
     }
 }

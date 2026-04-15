@@ -91,4 +91,10 @@
         android:name="com.cybene.cyposdashboard.ui.supplier.SupplierFragment"
         android:label="@string/supplier_dashboard"
         tools:layout="@layout/fragment_supplier" />
+
+    <fragment
+        android:id="@+id/nav_notifications"
+        android:name="com.cybene.cyposdashboard.ui.notification.NotificationsFragment"
+        android:label="@string/notifications"
+        tools:layout="@layout/fragment_notifications" />
 </navigation>
