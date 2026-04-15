@@ -10,6 +10,7 @@ import android.view.WindowManager;
 
 import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.ui.auth.LoginActivity;
+import com.cybene.cyposdashboard.utils.db.Db;
 import com.cybene.cyposdashboard.utils.db.SharedPrefs;
 
 import java.util.Objects;
@@ -35,8 +36,24 @@ public class SplashActivity extends AppCompatActivity {
             // if User has logged in
             //Show Menu screen
             if(session.isLoggedIn()){
-                Intent home = new Intent(SplashActivity.this, MenuActivity.class);
-                startActivity(home);
+                Db db = new Db(getApplicationContext());
+                android.database.Cursor cursor = db.getUser();
+                String userId = null;
+                if (cursor.moveToFirst()) {
+                    userId = cursor.getString(0);
+                }
+                cursor.close();
+
+                if (userId != null && db.hasUserPin(userId)) {
+                    Intent lock = new Intent(SplashActivity.this, com.cybene.cyposdashboard.ui.auth.LockActivity.class);
+                    startActivity(lock);
+                } else if (userId != null) {
+                    Intent setPin = new Intent(SplashActivity.this, com.cybene.cyposdashboard.ui.auth.SetPinActivity.class);
+                    startActivity(setPin);
+                } else {
+                    Intent home = new Intent(SplashActivity.this, MenuActivity.class);
+                    startActivity(home);
+                }
                 finish();
             }
             //Otherwise show login screen

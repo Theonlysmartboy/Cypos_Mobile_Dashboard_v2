@@ -48,6 +48,8 @@
         <activity android:name=".ui.auth.PasswordResetActivity" />
         <activity android:name=".ui.auth.RegisterActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
+        <activity android:name=".ui.auth.SetPinActivity" />
+        <activity android:name=".ui.auth.LockActivity" />
     </application>
 
 </manifest>

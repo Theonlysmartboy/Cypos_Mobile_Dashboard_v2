@@ -271,8 +271,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * Loads the main menu activity.
      */
     private void loadMain() {
-        Intent loadMain = new Intent(LoginActivity.this, MenuActivity.class);
-        startActivity(loadMain);
+        Intent intent;
+        android.database.Cursor cursor = myDb.getUser();
+        String userId = null;
+        if (cursor.moveToFirst()) {
+            userId = cursor.getString(0);
+        }
+        cursor.close();
+
+        if (userId != null && myDb.hasUserPin(userId)) {
+            intent = new Intent(LoginActivity.this, LockActivity.class);
+        } else if (userId != null) {
+            intent = new Intent(LoginActivity.this, SetPinActivity.class);
+        } else {
+            intent = new Intent(LoginActivity.this, MenuActivity.class);
+        }
+        startActivity(intent);
         finish();
     }
 

@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class Db extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "cypos.db";
     private static final String SQL_CREATE_CONFIG_TABLE =  "CREATE TABLE tbl_config (" +
             "id INTEGER PRIMARY KEY NOT NULL," +
@@ -19,7 +19,9 @@ public class Db extends SQLiteOpenHelper {
     private static final String SQL_CREATE_USERS_TABLE =  "CREATE TABLE tbl_users (" +
             "id INTEGER PRIMARY KEY NOT NULL," +
             "name varchar(100) NOT NULL," +
-            "email varchar(65) NOT NULL);";
+            "email varchar(65) NOT NULL," +
+            "has_pin INTEGER DEFAULT 0," +
+            "pin_hash TEXT);";
 
     private static final String SQL_CREATE_NOTIFICATIONS_TABLE = "CREATE TABLE tbl_notifications (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -46,12 +48,17 @@ public class Db extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_NOTIFICATIONS_TABLE);
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // This database is only a cache for online data, so its upgrade policy is
-        // to simply to discard the data and start over
-        db.execSQL(SQL_DELETE_CONFIG_TABLE);
-        db.execSQL(SQL_DELETE_USERS_TABLE);
-        db.execSQL(SQL_DELETE_NOTIFICATIONS_TABLE);
-        onCreate(db);
+        if (oldVersion < 2) {
+            db.execSQL(SQL_DELETE_CONFIG_TABLE);
+            db.execSQL(SQL_DELETE_USERS_TABLE);
+            db.execSQL(SQL_CREATE_CONFIG_TABLE);
+            db.execSQL(SQL_CREATE_USERS_TABLE);
+            db.execSQL(SQL_CREATE_NOTIFICATIONS_TABLE);
+        }
+        if (oldVersion < 3) {
+            db.execSQL("ALTER TABLE tbl_users ADD COLUMN has_pin INTEGER DEFAULT 0");
+            db.execSQL("ALTER TABLE tbl_users ADD COLUMN pin_hash TEXT");
+        }
     }
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
@@ -149,5 +156,35 @@ public class Db extends SQLiteOpenHelper {
     public boolean deleteNotification(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete("tbl_notifications", "id = ?", new String[]{String.valueOf(id)}) > 0;
+    }
+
+    public String getUserPin(String userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT pin_hash FROM tbl_users WHERE id = ?", new String[]{userId});
+        String pin = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            pin = cursor.getString(0);
+        }
+        if (cursor != null) cursor.close();
+        return pin;
+    }
+
+    public boolean updateUserPin(String userId, String hash) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("pin_hash", hash);
+        values.put("has_pin", 1);
+        return db.update("tbl_users", values, "id = ?", new String[]{userId}) > 0;
+    }
+
+    public boolean hasUserPin(String userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT has_pin FROM tbl_users WHERE id = ?", new String[]{userId});
+        boolean hasPin = false;
+        if (cursor != null && cursor.moveToFirst()) {
+            hasPin = cursor.getInt(0) == 1;
+        }
+        if (cursor != null) cursor.close();
+        return hasPin;
     }
 }
