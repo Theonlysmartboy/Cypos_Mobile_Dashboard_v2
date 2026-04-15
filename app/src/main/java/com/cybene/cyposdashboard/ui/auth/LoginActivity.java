@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -15,7 +13,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +33,6 @@ import com.cybene.cyposdashboard.utils.db.SharedPrefs;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -155,13 +151,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             try {
                 JSONObject jObj = new JSONObject(response);
                 boolean error = jObj.getBoolean("error");
-                // Check for error node in json
+                // Check for error node in JSON
                 if (!error) {
                     // user successfully logged in
                     //check if remember is checked
                     if(remember.isChecked()){
                         // Create login session
-                        session.saveString("isLoggedIn", "true");
+                        session.saveBoolean("isLoggedIn", true);
                     }
 
                     // Now store the user in SQLite
@@ -192,17 +188,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         }, error -> {
             if (error.networkResponse == null) {
-                Log.e("VolleyError", "No network response (timeout, no internet, etc.)");
+                Log.e(TAG, "Network error: " + error);
                 Toast.makeText(this, "Network error: Check your connection", Toast.LENGTH_SHORT).show();
-                hideDialog();
-                login.setEnabled(true);
+            } else {
+                Log.e(TAG, "Login Error: "
+                        + error.networkResponse.statusCode + " >> "
+                        + new String(error.networkResponse.data));
+                Toast.makeText(getApplicationContext(),
+                        "Server error: " + error.networkResponse.statusCode,
+                        Toast.LENGTH_LONG).show();
             }
-            assert error.networkResponse != null;
-            Log.e(TAG, "Login Error: " +error + ">>" + error.networkResponse.statusCode
-                    + ">>" + Arrays.toString(error.networkResponse.data)
-                    + ">>" + error.getCause()
-                    + ">>" + error.getMessage());
-            Toast.makeText(getApplicationContext(), "Error Logging In please try again "+error.getMessage(), Toast.LENGTH_LONG).show();
+
             hideDialog();
             login.setEnabled(true);
         }) {

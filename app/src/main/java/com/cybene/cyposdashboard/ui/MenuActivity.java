@@ -30,7 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallbacks {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private static int count= Integer.parseInt(SharedPrefs.getInstance().getString("notification_content"));
+    private static final int count= Integer.parseInt(SharedPrefs.getInstance().getString("notification_content"));
     private Db myDb;
     TextView name, email;
 
@@ -58,14 +58,37 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
         }
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home,
-                R.id.nav_sales, R.id.nav_purchase, R.id.nav_inventory, R.id.nav_accounts, R.id.nav_branch, R.id.nav_customer,R.id.nav_supplier)
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_sales,
+                R.id.nav_purchase, R.id.nav_inventory, R.id.nav_accounts, R.id.nav_branch,
+                R.id.nav_customer, R.id.nav_supplier, R.id.nav_profile, R.id.nav_settings,
+                R.id.nav_logout)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_logout) {
+                SharedPrefs.getInstance().saveBoolean("isLoggedIn", false);
+                myDb.deleteUser();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_settings) {
+                Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show();
+                return true;
+            } else if (id == R.id.nav_profile) {
+                startActivity(new Intent(this, PasswordResetActivity.class));
+                return true;
+            } else {
+                boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
+                if (handled) {
+                    drawer.closeDrawers();
+                }
+                return handled;
+            }
+        });
     }
 
     @Override
@@ -73,23 +96,24 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
         MenuItem menuItem = menu.findItem(R.id.action_notifications);
-        menuItem.setIcon(Converter.convertLayoutToImage(MenuActivity.this,0,R.drawable.ic_baseline_notifications));
+        int unreadCount = myDb.getUnreadCount();
+        menuItem.setIcon(Converter.convertLayoutToImage(MenuActivity.this, unreadCount, R.drawable.ic_baseline_notifications));
 
         return true;
     }
+
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_notifications){
+        if (item.getItemId() == R.id.action_notifications) {
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            navController.navigate(R.id.nav_notifications);
             return true;
         } else if (item.getItemId() == R.id.action_profile) {
             Intent profile = new Intent(MenuActivity.this, PasswordResetActivity.class);
             startActivity(profile);
             return true;
         } else if (item.getItemId() == R.id.action_logout) {
-            //restore prefs
-            SharedPrefs.getInstance().saveString("isLoggedIn", "");
-            //delete user from sync db
+            SharedPrefs.getInstance().saveBoolean("isLoggedIn", false);
             myDb.deleteUser();
-            //move app to login
             Intent Main = new Intent(MenuActivity.this, LoginActivity.class);
             startActivity(Main);
             finish();
@@ -111,9 +135,6 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
 
     @Override
     public void onNewNotificationReceived() {
-        count= Integer.parseInt(SharedPrefs.getInstance().getString("notification_content"));
-        count++;
-        SharedPrefs.getInstance().saveString("notification_content", String.valueOf(count));
         invalidateOptionsMenu();
         Snackbar.make(findViewById(R.id.parentContainer), "You have a new Notification !!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
@@ -121,9 +142,6 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
 
     @Override
     public void onReadNotification() {
-        count= Integer.parseInt(SharedPrefs.getInstance().getString("notification_content"));
-        count--;
-        SharedPrefs.getInstance().saveString("notification_content", String.valueOf(count));
         invalidateOptionsMenu();
     }
 }

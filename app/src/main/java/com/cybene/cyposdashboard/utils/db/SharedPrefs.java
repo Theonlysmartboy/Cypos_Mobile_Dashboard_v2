@@ -8,7 +8,7 @@ import com.cybene.cyposdashboard.utils.AppController;
 public class SharedPrefs {
     private static String PREFERENCE_NAME = "cyposdashboard";
     private static SharedPrefs sharedPreferenceUtil;
-    private SharedPreferences preferences;
+    private final SharedPreferences preferences;
 
     public SharedPrefs(Context context) {
         PREFERENCE_NAME = PREFERENCE_NAME + context.getPackageName();
@@ -26,7 +26,12 @@ public class SharedPrefs {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(key,val);
         System.out.println("shared prefs "+key + val);
-        editor.commit();
+        editor.apply();
+    }
+    public void saveBoolean(String key, boolean value) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
     }
     public String getString(String key, String defVal){
         return preferences.getString(key,defVal);
