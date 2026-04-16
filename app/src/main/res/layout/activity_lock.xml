@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="32dp">
+    android:padding="32dp"
+    android:background="@color/honeydew">
 
     <ImageView
         android:contentDescription="@string/lock_image"

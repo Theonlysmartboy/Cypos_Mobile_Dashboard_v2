@@ -289,4 +289,7 @@
     <string name="storage_usage_calculating">Storage Usage: Calculating...</string>
     <string name="device_loading">Device: Loading...</string>
     <string name="copy_device_information">Copy Device Information</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="monday">Monday</string>
 </resources>
