@@ -17,8 +17,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.cybene.cyposdashboard.R;
+import com.cybene.cyposdashboard.ui.activities.auth.AuthGateActivity;
 import com.cybene.cyposdashboard.ui.activities.auth.LockActivity;
-import com.cybene.cyposdashboard.ui.activities.auth.LoginActivity;
 import com.cybene.cyposdashboard.ui.activities.auth.PasswordResetActivity;
 import com.cybene.cyposdashboard.utils.Converter;
 import com.cybene.cyposdashboard.utils.db.Db;
@@ -87,8 +87,8 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
 
     private void logout() {
         SharedPrefs.getInstance().saveBoolean("isLoggedIn", false);
-        //myDb.deleteUser();
-        Intent intent = new Intent(this, LoginActivity.class);
+        // Do NOT delete user or PIN to allow Biometric/PIN login after logout
+        Intent intent = new Intent(this, AuthGateActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

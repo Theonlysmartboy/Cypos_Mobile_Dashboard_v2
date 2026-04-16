@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cybene.cyposdashboard.R;
-import com.cybene.cyposdashboard.ui.activities.auth.LoginActivity;
 import com.cybene.cyposdashboard.utils.adapter.WelcomeViewPagerAdapter;
 import com.cybene.cyposdashboard.utils.items.WelcomeItem;
 import com.google.android.material.tabs.TabLayout;
@@ -99,10 +98,9 @@ public class WelcomeActivity extends AppCompatActivity {
         // Get Started button click listener
 
         btnGetStarted.setOnClickListener(v -> {
-            //open main activity
-            Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(loginActivity);
-            //SAVE a boolean value to show that user has already seen the welcome screen
+            // Flow: Onboarding -> Configuration
+            Intent configActivity = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(configActivity);
             savePrefsData();
             finish();
         });

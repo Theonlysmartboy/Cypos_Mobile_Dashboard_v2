@@ -13,12 +13,11 @@ import com.cybene.cyposdashboard.ui.activities.auth.AuthGateActivity;
 import com.cybene.cyposdashboard.ui.activities.auth.LoginActivity;
 import com.cybene.cyposdashboard.ui.activities.auth.SetPinActivity;
 import com.cybene.cyposdashboard.utils.db.Db;
-import com.cybene.cyposdashboard.utils.db.SharedPrefs;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class SplashActivity extends AppCompatActivity {
-    private SharedPrefs session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,43 +29,46 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         // hide the action bar
         Objects.requireNonNull(getSupportActionBar()).hide();
-        session = new SharedPrefs(getApplicationContext());
         splash();
     }
     private void splash() {
         new Handler().postDelayed(() -> {
-            // if User has logged in
-            //Show Menu screen
-            if(session.isLoggedIn()){
-                Db db = new Db(getApplicationContext());
-                android.database.Cursor cursor = db.getUser();
-                String userId = null;
-                if (cursor.moveToFirst()) {
-                    userId = cursor.getString(0);
-                }
-                cursor.close();
-
-                if (userId != null && db.hasUserPin(userId)) {
-                    // Start AuthGate for subsequent app launches
-                    Intent authGate = new Intent(SplashActivity.this, AuthGateActivity.class);
-                    startActivity(authGate);
-                } else if (userId != null) {
-                    Intent setPin = new Intent(SplashActivity.this, SetPinActivity.class);
-                    startActivity(setPin);
-                } else {
-                    // Fallback to login if user data is missing
-                    Intent login = new Intent(SplashActivity.this, LoginActivity.class);
-                    startActivity(login);
-                }
+            Db db = new Db(getApplicationContext());
+            
+            // 1. Check Configuration (Server URL)
+            HashMap<String, String> config = db.getConfig();
+            if (config.isEmpty()) {
+                Intent welcome = new Intent(SplashActivity.this, WelcomeActivity.class);
+                startActivity(welcome);
                 finish();
+                return;
             }
-            //Otherwise show login screen
-            else{
+
+            // 2. Check User
+            android.database.Cursor cursor = db.getUser();
+            String userId = null;
+            if (cursor.moveToFirst()) {
+                userId = cursor.getString(0);
+            }
+            cursor.close();
+
+            if (userId == null) {
+                // No user -> Go to Login
                 Intent login = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(login);
-                finish();
+            } else {
+                // User exists -> Check for PIN
+                if (db.hasUserPin(userId)) {
+                    // Subsequent launch or after logout -> Biometric/PIN gate
+                    Intent authGate = new Intent(SplashActivity.this, AuthGateActivity.class);
+                    startActivity(authGate);
+                } else {
+                    // Logged in but no PIN set yet
+                    Intent setPin = new Intent(SplashActivity.this, SetPinActivity.class);
+                    startActivity(setPin);
+                }
             }
-        },5000);
-
+            finish();
+        },3000);
     }
 }
