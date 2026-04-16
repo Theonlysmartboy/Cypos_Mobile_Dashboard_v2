@@ -30,21 +30,18 @@ public class LockActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lock);
-
         Db db = new Db(this);
         android.database.Cursor cursor = db.getUser();
         if (cursor.moveToFirst()) {
             userId = cursor.getString(0);
         }
         cursor.close();
-        
         storedHash = db.getUserPin(userId);
-
         pin1 = findViewById(R.id.pin_1);
         pin2 = findViewById(R.id.pin_2);
         pin3 = findViewById(R.id.pin_3);
         pin4 = findViewById(R.id.pin_4);
-
+        clearPins();
         setupPinInputs();
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -61,11 +58,9 @@ public class LockActivity extends AppCompatActivity {
             final int index = i;
             pins[i].setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
             pins[i].setTransformationMethod(new PasswordTransformationMethod());
-
             pins[i].addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (s.length() == 1) {
@@ -73,15 +68,13 @@ public class LockActivity extends AppCompatActivity {
                             new Handler(Looper.getMainLooper()).postDelayed(() -> pins[index + 1].requestFocus(), 100);
                         } else {
                             // Delay slightly to let the last dot appear
-                            new Handler(Looper.getMainLooper()).postDelayed(() -> validatePin(), 300);
+                            validatePin();
                         }
                     }
                 }
-
                 @Override
                 public void afterTextChanged(Editable s) {}
             });
-
             pins[i].setOnKeyListener((v, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
                     if (pins[index].getText().length() == 0 && index > 0) {
@@ -98,9 +91,7 @@ public class LockActivity extends AppCompatActivity {
     private void validatePin() {
         String enteredPin = pin1.getText().toString() + pin2.getText().toString() + 
                             pin3.getText().toString() + pin4.getText().toString();
-        
         String hashedInput = HashUtils.hashPin(enteredPin);
-        
         if (storedHash != null && storedHash.equals(hashedInput)) {
             startActivity(new Intent(this, MenuActivity.class));
             finish();
