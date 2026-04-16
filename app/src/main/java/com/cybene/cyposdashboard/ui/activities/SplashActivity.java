@@ -9,7 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.cybene.cyposdashboard.R;
-import com.cybene.cyposdashboard.ui.activities.auth.LockActivity;
+import com.cybene.cyposdashboard.ui.activities.auth.AuthGateActivity;
 import com.cybene.cyposdashboard.ui.activities.auth.LoginActivity;
 import com.cybene.cyposdashboard.ui.activities.auth.SetPinActivity;
 import com.cybene.cyposdashboard.utils.db.Db;
@@ -47,14 +47,16 @@ public class SplashActivity extends AppCompatActivity {
                 cursor.close();
 
                 if (userId != null && db.hasUserPin(userId)) {
-                    Intent lock = new Intent(SplashActivity.this, LockActivity.class);
-                    startActivity(lock);
+                    // Start AuthGate for subsequent app launches
+                    Intent authGate = new Intent(SplashActivity.this, AuthGateActivity.class);
+                    startActivity(authGate);
                 } else if (userId != null) {
                     Intent setPin = new Intent(SplashActivity.this, SetPinActivity.class);
                     startActivity(setPin);
                 } else {
-                    Intent home = new Intent(SplashActivity.this, MenuActivity.class);
-                    startActivity(home);
+                    // Fallback to login if user data is missing
+                    Intent login = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(login);
                 }
                 finish();
             }

@@ -280,7 +280,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         cursor.close();
 
         if (userId != null && myDb.hasUserPin(userId)) {
-            intent = new Intent(LoginActivity.this, LockActivity.class);
+            intent = new Intent(LoginActivity.this, MenuActivity.class);
         } else if (userId != null) {
             intent = new Intent(LoginActivity.this, SetPinActivity.class);
         } else {
