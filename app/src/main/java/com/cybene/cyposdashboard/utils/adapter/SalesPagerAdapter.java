@@ -4,19 +4,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.cybene.cyposdashboard.ui.sales.CashSalePaymentModeFragment;
-import com.cybene.cyposdashboard.ui.sales.ComputerWiseSalesFragment;
-import com.cybene.cyposdashboard.ui.sales.CreditNoteListFragment;
-import com.cybene.cyposdashboard.ui.sales.CustomerWiseSalesDataGridFragment;
-import com.cybene.cyposdashboard.ui.sales.DailySalesDataGridFragment;
-import com.cybene.cyposdashboard.ui.sales.DailySalesFragment;
-import com.cybene.cyposdashboard.ui.sales.InvoiceListFragment;
-import com.cybene.cyposdashboard.ui.sales.MonthlySalesDataGridFragment;
-import com.cybene.cyposdashboard.ui.sales.MonthlySalesFragment;
-import com.cybene.cyposdashboard.ui.sales.SalesManWiseSalesDataGridFragment;
-import com.cybene.cyposdashboard.ui.sales.TillCashPickupFragment;
-import com.cybene.cyposdashboard.ui.sales.TransactionWiseSalesDataGridFragment;
-import com.cybene.cyposdashboard.ui.sales.VatCodeWiseSalesDataGridFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.CashSalePaymentModeFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.ComputerWiseSalesFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.CreditNoteListFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.CustomerWiseSalesDataGridFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.DailySalesDataGridFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.DailySalesFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.InvoiceListFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.MonthlySalesDataGridFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.MonthlySalesFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.SalesManWiseSalesDataGridFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.TillCashPickupFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.TransactionWiseSalesDataGridFragment;
+import com.cybene.cyposdashboard.ui.fragment.sales.VatCodeWiseSalesDataGridFragment;
 
 public class SalesPagerAdapter extends FragmentStatePagerAdapter {
     String[] tabArray = new String[]{"M.S.C", "M.S.G", "D.S.C","D.S.G", "I.L", "T.C.P", "C.S.P", "C.W.S",

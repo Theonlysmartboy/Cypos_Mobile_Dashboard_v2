@@ -4,18 +4,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.cybene.cyposdashboard.ui.customer.CreditNoteListFragment;
-import com.cybene.cyposdashboard.ui.customer.CustomerCreditDetailsFragment;
-import com.cybene.cyposdashboard.ui.customer.DailyCustomerSalesFragment;
-import com.cybene.cyposdashboard.ui.customer.InvoiceListFragment;
-import com.cybene.cyposdashboard.ui.customer.LastInvoiceDetailsFragment;
-import com.cybene.cyposdashboard.ui.customer.LastReceiptDetailsFragment;
-import com.cybene.cyposdashboard.ui.customer.MonthlyCustomerPurchaseFragment;
-import com.cybene.cyposdashboard.ui.customer.MonthlyCustomerSalesFragment;
-import com.cybene.cyposdashboard.ui.customer.MonthlySalesCustomerWiseFragment;
-import com.cybene.cyposdashboard.ui.customer.PostDatedChequeFragment;
-import com.cybene.cyposdashboard.ui.customer.ReceiptFragment;
-import com.cybene.cyposdashboard.ui.customer.TotalInvoicePerMonthFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.CreditNoteListFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.CustomerCreditDetailsFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.DailyCustomerSalesFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.InvoiceListFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.LastInvoiceDetailsFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.LastReceiptDetailsFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.MonthlyCustomerPurchaseFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.MonthlyCustomerSalesFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.MonthlySalesCustomerWiseFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.PostDatedChequeFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.ReceiptFragment;
+import com.cybene.cyposdashboard.ui.fragment.customer.TotalInvoicePerMonthFragment;
 
 
 public class CustomerPagerAdapter extends FragmentStatePagerAdapter {

@@ -78,7 +78,16 @@ public class Db extends SQLiteOpenHelper {
         contentValue.put("id", uid);
         contentValue.put("name", name);
         contentValue.put("email", email);
-        long result = db.insertWithOnConflict("tbl_users",null,
+        
+        // Check if user already exists to preserve PIN data
+        Cursor cursor = db.query("tbl_users", new String[]{"has_pin", "pin_hash"}, "id = ?", new String[]{uid}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            contentValue.put("has_pin", cursor.getInt(0));
+            contentValue.put("pin_hash", cursor.getString(1));
+            cursor.close();
+        }
+
+        long result = db.insertWithOnConflict("tbl_users", null,
                 contentValue, SQLiteDatabase.CONFLICT_REPLACE);
         return result != -1;
     }
@@ -104,10 +113,10 @@ public class Db extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from tbl_config");
     }
-    public void deleteUser(){
+    /*public void deleteUser(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from tbl_users");
-    }
+    }*/
 
     public boolean updateConfig(String key, String value) {
         SQLiteDatabase db = this.getWritableDatabase();

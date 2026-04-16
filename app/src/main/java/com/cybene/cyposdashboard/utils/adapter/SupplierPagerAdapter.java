@@ -4,18 +4,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.cybene.cyposdashboard.ui.supplier.DailySupplierPurchaseGridFragment;
-import com.cybene.cyposdashboard.ui.supplier.GRNListFragment;
-import com.cybene.cyposdashboard.ui.supplier.GoodsReturnNoteListFragment;
-import com.cybene.cyposdashboard.ui.supplier.LastGRNDetailsFragment;
-import com.cybene.cyposdashboard.ui.supplier.LastPaymentDetailsFragment;
-import com.cybene.cyposdashboard.ui.supplier.MonthlyPurchaseSupplierWiseFragment;
-import com.cybene.cyposdashboard.ui.supplier.MonthlySupplierPurchaseChartFragment;
-import com.cybene.cyposdashboard.ui.supplier.MonthlySupplierPurchaseGridFragment;
-import com.cybene.cyposdashboard.ui.supplier.PaymentListFragment;
-import com.cybene.cyposdashboard.ui.supplier.PostDatedChequeSupplierListFragment;
-import com.cybene.cyposdashboard.ui.supplier.SupplierCreditDetailsFragment;
-import com.cybene.cyposdashboard.ui.supplier.TotalGRNPerMonthFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.DailySupplierPurchaseGridFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.GRNListFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.GoodsReturnNoteListFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.LastGRNDetailsFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.LastPaymentDetailsFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.MonthlyPurchaseSupplierWiseFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.MonthlySupplierPurchaseChartFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.MonthlySupplierPurchaseGridFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.PaymentListFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.PostDatedChequeSupplierListFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.SupplierCreditDetailsFragment;
+import com.cybene.cyposdashboard.ui.fragment.supplier.TotalGRNPerMonthFragment;
 
 
 public class SupplierPagerAdapter extends FragmentStatePagerAdapter {

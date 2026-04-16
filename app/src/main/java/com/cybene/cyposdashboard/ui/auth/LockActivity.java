@@ -2,8 +2,12 @@ package com.cybene.cyposdashboard.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -55,6 +59,9 @@ public class LockActivity extends AppCompatActivity {
         EditText[] pins = {pin1, pin2, pin3, pin4};
         for (int i = 0; i < pins.length; i++) {
             final int index = i;
+            pins[i].setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+            pins[i].setTransformationMethod(new PasswordTransformationMethod());
+
             pins[i].addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -63,10 +70,10 @@ public class LockActivity extends AppCompatActivity {
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (s.length() == 1) {
                         if (index < pins.length - 1) {
-                            pins[index + 1].requestFocus();
+                            new Handler(Looper.getMainLooper()).postDelayed(() -> pins[index + 1].requestFocus(), 100);
                         } else {
                             // Delay slightly to let the last dot appear
-                            pins[index].postDelayed(() -> validatePin(), 100);
+                            new Handler(Looper.getMainLooper()).postDelayed(() -> validatePin(), 300);
                         }
                     }
                 }

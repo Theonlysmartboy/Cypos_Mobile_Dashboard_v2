@@ -86,7 +86,7 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
 
     private void logout() {
         SharedPrefs.getInstance().saveBoolean("isLoggedIn", false);
-        myDb.deleteUser();
+        //myDb.deleteUser();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -139,11 +139,7 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
             startActivity(profile);
             return true;
         } else if (item.getItemId() == R.id.action_logout) {
-            SharedPrefs.getInstance().saveBoolean("isLoggedIn", false);
-            myDb.deleteUser();
-            Intent Main = new Intent(MenuActivity.this, LoginActivity.class);
-            startActivity(Main);
-            finish();
+            logout();
             return true;
         }else if(item.getItemId() == R.id.action_settings){
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

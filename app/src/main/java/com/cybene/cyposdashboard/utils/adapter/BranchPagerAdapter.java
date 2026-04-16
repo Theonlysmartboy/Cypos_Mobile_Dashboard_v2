@@ -5,12 +5,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.cybene.cyposdashboard.ui.branch.PaymentListFragment;
-import com.cybene.cyposdashboard.ui.branch.PaymentReversalListFragment;
-import com.cybene.cyposdashboard.ui.branch.ReceiptListFragment;
-import com.cybene.cyposdashboard.ui.branch.ReceiptReversalListFragment;
-import com.cybene.cyposdashboard.ui.branch.ReceivedListFragment;
-import com.cybene.cyposdashboard.ui.branch.TransferListFragment;
+import com.cybene.cyposdashboard.ui.fragment.branch.PaymentListFragment;
+import com.cybene.cyposdashboard.ui.fragment.branch.PaymentReversalListFragment;
+import com.cybene.cyposdashboard.ui.fragment.branch.ReceiptListFragment;
+import com.cybene.cyposdashboard.ui.fragment.branch.ReceiptReversalListFragment;
+import com.cybene.cyposdashboard.ui.fragment.branch.ReceivedListFragment;
+import com.cybene.cyposdashboard.ui.fragment.branch.TransferListFragment;
 
 public class BranchPagerAdapter extends FragmentStatePagerAdapter {
     String[] tabArray = new String[]{"BRANCH TRANSFER", "BRANCH RECEIVED", "BRANCH PAYMENT","BRANCH PAYMENT REV","BRANCH RECEIPT","BRANCH RECEIPT REV"};
