@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.cybene.cyposdashboard.ui.inventory.DeliveryNoteListFragment;
-import com.cybene.cyposdashboard.ui.inventory.DepartmentWiseStockValuationFragment;
-import com.cybene.cyposdashboard.ui.inventory.TotalStockValuationFragment;
+import com.cybene.cyposdashboard.ui.fragment.inventory.DeliveryNoteListFragment;
+import com.cybene.cyposdashboard.ui.fragment.inventory.DepartmentWiseStockValuationFragment;
+import com.cybene.cyposdashboard.ui.fragment.inventory.TotalStockValuationFragment;
 
 public class InventoryPagerAdapter extends FragmentStatePagerAdapter {
     String[] tabArray = new String[]{"DELIVERY NOTE LIST", "DEPARTMENT WISE STOCK VALUATION", "TOTAL STOCK VALUATION"};

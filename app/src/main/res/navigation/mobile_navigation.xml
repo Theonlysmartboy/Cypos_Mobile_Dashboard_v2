@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.cybene.cyposdashboard.ui.dashboard.HomeFragment"
+        android:name="com.cybene.cyposdashboard.ui.fragment.dashboard.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home">
 
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/nav_dashboard_detail"
-        android:name="com.cybene.cyposdashboard.ui.dashboard.DashboardDetailFragment"
+        android:name="com.cybene.cyposdashboard.ui.fragment.dashboard.DashboardDetailFragment"
         android:label="Dashboard Detail"
         tools:layout="@layout/fragment_dashboard_detail">
 
@@ -40,61 +40,67 @@
 
     <fragment
         android:id="@+id/nav_sales"
-        android:name="com.cybene.cyposdashboard.ui.sales.SalesFragment"
+        android:name="com.cybene.cyposdashboard.ui.fragment.sales.SalesFragment"
         android:label="@string/sales"
         tools:layout="@layout/fragment_sales" />
 
     <fragment
         android:id="@+id/nav_sales_man"
-        android:name="com.cybene.cyposdashboard.ui.sales.SalesMan"
+        android:name="com.cybene.cyposdashboard.ui.fragment.sales.SalesMan"
         android:label="@string/sales_man"
         tools:layout="@layout/fragment_sales_man" />
 
     <fragment
         android:id="@+id/nav_sales_order"
-        android:name="com.cybene.cyposdashboard.ui.sales.SalesOrder"
+        android:name="com.cybene.cyposdashboard.ui.fragment.sales.SalesOrder"
         android:label="@string/sales_order"
         tools:layout="@layout/fragment_sales_order" />
 
     <fragment
         android:id="@+id/nav_purchase"
-        android:name="com.cybene.cyposdashboard.ui.purchase.PurchaseFragment"
+        android:name="com.cybene.cyposdashboard.ui.fragment.purchase.PurchaseFragment"
         android:label="@string/purchase"
         tools:layout="@layout/fragment_purchase" />
 
     <fragment
         android:id="@+id/nav_inventory"
-        android:name="com.cybene.cyposdashboard.ui.inventory.InventoryFragment"
+        android:name="com.cybene.cyposdashboard.ui.fragment.inventory.InventoryFragment"
         android:label="@string/inventory"
         tools:layout="@layout/fragment_inventory" />
 
     <fragment
         android:id="@+id/nav_accounts"
-        android:name="com.cybene.cyposdashboard.ui.accounts.AccountsFragment"
+        android:name="com.cybene.cyposdashboard.ui.fragment.accounts.AccountsFragment"
         android:label="@string/accounts"
         tools:layout="@layout/fragment_accounts" />
 
     <fragment
         android:id="@+id/nav_branch"
-        android:name="com.cybene.cyposdashboard.ui.branch.BranchFragment"
+        android:name="com.cybene.cyposdashboard.ui.fragment.branch.BranchFragment"
         android:label="@string/branches"
         tools:layout="@layout/fragment_branch" />
 
     <fragment
         android:id="@+id/nav_customer"
-        android:name="com.cybene.cyposdashboard.ui.customer.CustomerFragment"
+        android:name="com.cybene.cyposdashboard.ui.fragment.customer.CustomerFragment"
         android:label="@string/customer_dashboard"
         tools:layout="@layout/fragment_customer" />
 
     <fragment
         android:id="@+id/nav_supplier"
-        android:name="com.cybene.cyposdashboard.ui.supplier.SupplierFragment"
+        android:name="com.cybene.cyposdashboard.ui.fragment.supplier.SupplierFragment"
         android:label="@string/supplier_dashboard"
         tools:layout="@layout/fragment_supplier" />
 
     <fragment
         android:id="@+id/nav_notifications"
-        android:name="com.cybene.cyposdashboard.ui.notification.NotificationsFragment"
+        android:name="com.cybene.cyposdashboard.ui.fragment.notification.NotificationsFragment"
         android:label="@string/notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.cybene.cyposdashboard.ui.fragment.settings.SettingsFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

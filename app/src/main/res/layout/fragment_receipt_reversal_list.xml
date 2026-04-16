@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.accounts.ReceiptReversalListFragment">
+    tools:context=".ui.fragment.accounts.ReceiptReversalListFragment">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

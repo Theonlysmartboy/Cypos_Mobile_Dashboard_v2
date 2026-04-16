@@ -43,4 +43,24 @@ public class SharedPrefs {
     public boolean isLoggedIn(){
         return preferences.getBoolean("isLoggedIn", false);
     }
+
+    public void saveLong(String key, long value) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(key, value);
+        editor.apply();
+    }
+
+    public long getLong(String key, long defVal) {
+        return preferences.getLong(key, defVal);
+    }
+
+    public void saveInt(String key, int value) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
+    public int getInt(String key, int defVal) {
+        return preferences.getInt(key, defVal);
+    }
 }

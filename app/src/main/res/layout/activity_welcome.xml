@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.WelcomeActivity"
-    android:background="@color/white">
+    tools:context=".ui.activities.WelcomeActivity"
+    android:background="@color/honeydew">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/wPager"

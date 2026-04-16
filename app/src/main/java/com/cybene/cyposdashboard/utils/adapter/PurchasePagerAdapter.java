@@ -5,15 +5,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.cybene.cyposdashboard.ui.purchase.DailyPurchaseChartFragment;
-import com.cybene.cyposdashboard.ui.purchase.DailyPurchaseGridFragment;
-import com.cybene.cyposdashboard.ui.purchase.DepartmentWisePurchaseFragment;
-import com.cybene.cyposdashboard.ui.purchase.GrnListFragment;
-import com.cybene.cyposdashboard.ui.purchase.LpoListFragment;
-import com.cybene.cyposdashboard.ui.purchase.MonthlyPurchaseChartFragment;
-import com.cybene.cyposdashboard.ui.purchase.MonthlyPurchaseGridFragment;
-import com.cybene.cyposdashboard.ui.purchase.ReturnedGoodsListFragment;
-import com.cybene.cyposdashboard.ui.purchase.SupplierWisePurchaseListFragment;
+import com.cybene.cyposdashboard.ui.fragment.purchase.DailyPurchaseChartFragment;
+import com.cybene.cyposdashboard.ui.fragment.purchase.DailyPurchaseGridFragment;
+import com.cybene.cyposdashboard.ui.fragment.purchase.DepartmentWisePurchaseFragment;
+import com.cybene.cyposdashboard.ui.fragment.purchase.GrnListFragment;
+import com.cybene.cyposdashboard.ui.fragment.purchase.LpoListFragment;
+import com.cybene.cyposdashboard.ui.fragment.purchase.MonthlyPurchaseChartFragment;
+import com.cybene.cyposdashboard.ui.fragment.purchase.MonthlyPurchaseGridFragment;
+import com.cybene.cyposdashboard.ui.fragment.purchase.ReturnedGoodsListFragment;
+import com.cybene.cyposdashboard.ui.fragment.purchase.SupplierWisePurchaseListFragment;
 
 public class PurchasePagerAdapter extends FragmentStatePagerAdapter {
     String[] tabArray = new String[]{"D.P.C", "D.P.G", "M.P.C","M.P.G", "GRN List",

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.auth.RegisterActivity"
+    tools:context=".ui.activities.auth.RegisterActivity"
     android:orientation="vertical">
     <ImageView
         android:id="@+id/lLogo"
@@ -152,7 +152,6 @@
                     android:hint="@string/activation_key"
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/colorPrimary"
-                    android:drawableLeft="@drawable/ic_baseline_lock"
                     android:drawablePadding="@dimen/margin"
                     android:drawableStart="@drawable/ic_baseline_lock"
                     android:autofillHints="@string/activation_key"

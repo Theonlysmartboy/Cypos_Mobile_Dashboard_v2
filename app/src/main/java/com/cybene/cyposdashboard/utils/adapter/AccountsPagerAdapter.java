@@ -5,16 +5,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.cybene.cyposdashboard.ui.accounts.CustomerOutstandingFragment;
-import com.cybene.cyposdashboard.ui.accounts.PaymentListFragment;
-import com.cybene.cyposdashboard.ui.accounts.PaymentReversalListFragment;
-import com.cybene.cyposdashboard.ui.accounts.PostCreditNoteListSalesFragment;
-import com.cybene.cyposdashboard.ui.accounts.PostCreditNotePurchaseListFragment;
-import com.cybene.cyposdashboard.ui.accounts.PostDatedChequeSupplierListFragment;
-import com.cybene.cyposdashboard.ui.accounts.PostDatedChequeCustomerListFragment;
-import com.cybene.cyposdashboard.ui.accounts.ReceiptListFragment;
-import com.cybene.cyposdashboard.ui.accounts.ReceiptReversalListFragment;
-import com.cybene.cyposdashboard.ui.accounts.SupplierOutstandingFragment;
+import com.cybene.cyposdashboard.ui.fragment.accounts.CustomerOutstandingFragment;
+import com.cybene.cyposdashboard.ui.fragment.accounts.PaymentListFragment;
+import com.cybene.cyposdashboard.ui.fragment.accounts.PaymentReversalListFragment;
+import com.cybene.cyposdashboard.ui.fragment.accounts.PostCreditNoteListSalesFragment;
+import com.cybene.cyposdashboard.ui.fragment.accounts.PostCreditNotePurchaseListFragment;
+import com.cybene.cyposdashboard.ui.fragment.accounts.PostDatedChequeSupplierListFragment;
+import com.cybene.cyposdashboard.ui.fragment.accounts.PostDatedChequeCustomerListFragment;
+import com.cybene.cyposdashboard.ui.fragment.accounts.ReceiptListFragment;
+import com.cybene.cyposdashboard.ui.fragment.accounts.ReceiptReversalListFragment;
+import com.cybene.cyposdashboard.ui.fragment.accounts.SupplierOutstandingFragment;
 
 public class AccountsPagerAdapter extends FragmentStatePagerAdapter {
     String[] tabArray = new String[]{"C.O", "S.O", "RECEIPT","RECEIPT REV","PAYMENT","PAYMENT REV",
