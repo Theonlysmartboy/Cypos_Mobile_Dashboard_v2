@@ -25,7 +25,6 @@ public class SetPinActivity extends AppCompatActivity {
     private EditText pin1, pin2, pin3, pin4;
     private TextView tvTitle, tvInstruction;
     private Button btnAction;
-    
     private String firstPin = "";
     private boolean isConfirming = false;
     private Db db;
@@ -35,16 +34,12 @@ public class SetPinActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_pin);
-
         db = new Db(this);
-        // Assuming user ID is stored in SharedPrefs or can be fetched from DB
-        // For this app, let's get the ID from tbl_users (first user)
         android.database.Cursor cursor = db.getUser();
         if (cursor.moveToFirst()) {
             userId = cursor.getString(0);
         }
         cursor.close();
-
         pin1 = findViewById(R.id.pin_1);
         pin2 = findViewById(R.id.pin_2);
         pin3 = findViewById(R.id.pin_3);
@@ -52,9 +47,8 @@ public class SetPinActivity extends AppCompatActivity {
         tvTitle = findViewById(R.id.tv_title);
         tvInstruction = findViewById(R.id.tv_instruction);
         btnAction = findViewById(R.id.btn_action);
-
+        clearPins();
         setupPinInputs();
-
         btnAction.setOnClickListener(v -> handleAction());
     }
 
@@ -64,7 +58,6 @@ public class SetPinActivity extends AppCompatActivity {
             final int index = i;
             pins[i].setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
             pins[i].setTransformationMethod(new PasswordTransformationMethod());
-            
             pins[i].addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -75,7 +68,6 @@ public class SetPinActivity extends AppCompatActivity {
                         new Handler(Looper.getMainLooper()).postDelayed(() -> pins[index + 1].requestFocus(), 100);
                     }
                 }
-
                 @Override
                 public void afterTextChanged(Editable s) {}
             });
@@ -85,12 +77,10 @@ public class SetPinActivity extends AppCompatActivity {
     private void handleAction() {
         String pin = pin1.getText().toString() + pin2.getText().toString() + 
                      pin3.getText().toString() + pin4.getText().toString();
-
         if (pin.length() < 4) {
             Toast.makeText(this, "Enter 4 digits", Toast.LENGTH_SHORT).show();
             return;
         }
-
         if (!isConfirming) {
             firstPin = pin;
             isConfirming = true;
@@ -106,6 +96,7 @@ public class SetPinActivity extends AppCompatActivity {
                     finish();
                 } else {
                     Toast.makeText(this, "Error saving PIN", Toast.LENGTH_SHORT).show();
+                    clearPins();
                 }
             } else {
                 Toast.makeText(this, "PINs do not match", Toast.LENGTH_SHORT).show();

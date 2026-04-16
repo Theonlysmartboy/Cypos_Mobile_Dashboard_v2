@@ -114,6 +114,7 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
                 // Lock the app
                 Intent intent = new Intent(this, LockActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("IS_IDLE_LOCK", true);
                 startActivity(intent);
             }
         }
