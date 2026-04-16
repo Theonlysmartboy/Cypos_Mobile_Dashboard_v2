@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="@color/honeydew">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,20 +11,24 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- User Profile Section -->
+        <!-- Section: User Account -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/user_profile"
-            android:textColor="@android:color/black"
+            android:text="@string/account"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:textAllCaps="true"
             android:textStyle="bold"
+            android:layout_marginStart="4dp"
             android:layout_marginBottom="8dp"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp">
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,7 +41,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/name"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <TextView
@@ -46,51 +51,68 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/email"
-                    android:textColor="@android:color/darker_gray" />
+                    android:textColor="#888888" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Security Section -->
+        <!-- Section: Security -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/security"
-            android:textColor="@android:color/black"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:textAllCaps="true"
             android:textStyle="bold"
+            android:layout_marginStart="4dp"
             android:layout_marginBottom="8dp"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp">
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/btn_change_pin"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:text="@string/change_pin"
-                    android:gravity="start|center_vertical" />
+                    android:textColor="@color/black"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:icon="@drawable/ic_baseline_lock"
+                    app:iconTint="#555555"/>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F0F0F0" android:layout_marginStart="16dp" android:layout_marginEnd="16dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="12dp">
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_baseline_settings"
+                        app:tint="#555555"
+                        android:contentDescription="@string/settings_icon"/>
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/idle_timeout"/>
+                        android:layout_marginStart="12dp"
+                        android:text="@string/auto_lock_timeout"
+                        android:textColor="@color/black"/>
                     <Spinner
                         android:id="@+id/spinner_idle_time"
                         android:layout_width="wrap_content"
@@ -99,142 +121,220 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- App Configuration Section -->
+        <!-- Section: Connection -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_configuration"
-            android:textColor="@android:color/black"
+            android:text="@string/connectivity"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:textAllCaps="true"
             android:textStyle="bold"
+            android:layout_marginStart="4dp"
             android:layout_marginBottom="8dp"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp">
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="12dp">
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/server_url"
+                    android:text="@string/backend_server_url"
                     android:textSize="12sp"
-                    android:textColor="@android:color/darker_gray"/>
+                    android:textColor="#888888"/>
 
                 <EditText
                     android:id="@+id/et_server_url"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints=""
-                    android:hint="@string/server_url"
+                    android:hint="@string/https_api_cybene_com"
                     android:inputType="textUri"
-                    android:textSize="14sp"/>
-
-                <Button
-                    android:id="@+id/btn_update_url"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:text="@string/update"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Preferences Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/preferences"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp">
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="12dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp">
+
                     <TextView
+                        android:id="@+id/tv_server_status"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/theme_selection"/>
-                    <Spinner
-                        android:id="@+id/spinner_theme"
+                        android:text="@string/status_checking"
+                        android:textSize="12sp"
+                        android:textColor="#555555"/>
+
+                    <Button
+                        android:id="@+id/btn_update_url"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="@string/save_url"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:textSize="12sp"/>
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Maintenance Section -->
+        <!-- Section: System & Maintenance -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/maintenance"
-            android:textColor="@android:color/black"
+            android:text="@string/system_amp_maintenance"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:textAllCaps="true"
             android:textStyle="bold"
+            android:layout_marginStart="4dp"
             android:layout_marginBottom="8dp"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp">
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btn_clear_cache"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/clear_cache"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:gravity="start|center_vertical" />
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/theme_preference"
+                        android:textColor="@color/black"/>
+                    <Spinner
+                        android:id="@+id/spinner_theme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F0F0F0" android:layout_marginStart="16dp" android:layout_marginEnd="16dp"/>
 
                 <Button
                     android:id="@+id/btn_view_logs"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="@string/view_system_logs"
+                    android:textColor="@color/black"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:icon="@drawable/ic_baseline_co_present_24"
+                    app:iconTint="#555555"/>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F0F0F0" android:layout_marginStart="16dp" android:layout_marginEnd="16dp"/>
+
+                <Button
+                    android:id="@+id/btn_clear_cache"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="@string/clear_app_cache"
+                    android:textColor="#D32F2F"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:icon="@drawable/ic_baseline_logout_24"
+                    app:iconTint="#D32F2F"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Section: Device Info -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_application"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="8dp"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tv_app_version"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/view_logs"
-                    android:gravity="start|center_vertical" />
+                    android:text="@string/version_1_0_0"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_storage_usage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/storage_usage_calculating"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_device_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/device_loading"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"/>
+
+                <Button
+                    android:id="@+id/btn_copy_device_info"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/copy_device_information"
+                    android:textSize="12sp"
+                    android:layout_gravity="end"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <Button
             android:id="@+id/btn_logout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="54dp"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="32dp"
             android:text="@string/logout"
-            android:backgroundTint="@android:color/holo_red_dark"
-            android:textColor="@android:color/white" />
+            android:backgroundTint="#D32F2F"
+            android:textColor="@android:color/white"
+            app:cornerRadius="12dp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 </ScrollView>
