@@ -19,6 +19,7 @@ import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.ui.activities.MenuActivity;
 import com.cybene.cyposdashboard.utils.HashUtils;
 import com.cybene.cyposdashboard.utils.db.Db;
+import com.cybene.cyposdashboard.utils.db.SharedPrefs;
 
 public class SetPinActivity extends AppCompatActivity {
 
@@ -92,6 +93,8 @@ public class SetPinActivity extends AppCompatActivity {
             if (pin.equals(firstPin)) {
                 String hashedPin = HashUtils.hashPin(pin);
                 if (db.updateUserPin(userId, hashedPin)) {
+                    SharedPrefs session = new SharedPrefs(getApplicationContext());
+                    session.saveBoolean("isLoggedIn", true);
                     startActivity(new Intent(this, MenuActivity.class));
                     finish();
                 } else {

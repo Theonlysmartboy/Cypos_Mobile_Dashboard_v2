@@ -10,6 +10,7 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import com.cybene.cyposdashboard.ui.activities.MenuActivity;
+import com.cybene.cyposdashboard.utils.db.SharedPrefs;
 
 import java.util.concurrent.Executor;
 
@@ -50,6 +51,8 @@ public class AuthGateActivity extends AppCompatActivity {
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
+                SharedPrefs session = new SharedPrefs(getApplicationContext());
+                session.saveBoolean("isLoggedIn", true);
                 startActivity(new Intent(AuthGateActivity.this, MenuActivity.class));
                 finish();
             }

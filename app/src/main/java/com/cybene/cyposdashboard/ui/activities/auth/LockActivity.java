@@ -19,6 +19,7 @@ import com.cybene.cyposdashboard.R;
 import com.cybene.cyposdashboard.ui.activities.MenuActivity;
 import com.cybene.cyposdashboard.utils.HashUtils;
 import com.cybene.cyposdashboard.utils.db.Db;
+import com.cybene.cyposdashboard.utils.db.SharedPrefs;
 
 public class LockActivity extends AppCompatActivity {
 
@@ -93,6 +94,8 @@ public class LockActivity extends AppCompatActivity {
                             pin3.getText().toString() + pin4.getText().toString();
         String hashedInput = HashUtils.hashPin(enteredPin);
         if (storedHash != null && storedHash.equals(hashedInput)) {
+            SharedPrefs session = new SharedPrefs(getApplicationContext());
+            session.saveBoolean("isLoggedIn", true);
             startActivity(new Intent(this, MenuActivity.class));
             finish();
         } else {
