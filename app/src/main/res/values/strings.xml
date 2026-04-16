@@ -249,4 +249,17 @@
     <string name="enter_pin">Enter PIN</string>
     <string name="change_pin">Change PIN</string>
     <string name="name">Name</string>
+    <string name="user_profile">User Profile</string>
+    <string name="security">Security</string>
+    <string name="idle_timeout">Idle Timeout</string>
+    <string name="app_configuration">App Configuration</string>
+    <string name="server_url">Server URL</string>
+    <string name="update">Update</string>
+    <string name="preferences">Preferences</string>
+    <string name="theme_selection">Theme Selection</string>
+    <string name="maintenance">Maintenance</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="view_logs">View Logs</string>
+    <string name="_4_digit_pin">4-digit PIN</string>
+    <string name="please_enter_your_pin_to_continue">Please enter your PIN to continue</string>
 </resources>

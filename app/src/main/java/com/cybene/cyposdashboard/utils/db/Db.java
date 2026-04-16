@@ -109,6 +109,21 @@ public class Db extends SQLiteOpenHelper {
         db.execSQL("delete from tbl_users");
     }
 
+    public boolean updateConfig(String key, String value) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        if ("url".equals(key)) {
+            values.put("path", value);
+        } else {
+            values.put(key, value);
+        }
+        int rows = db.update("tbl_config", values, null, null);
+        if (rows == 0) {
+            return storeConfig(value);
+        }
+        return rows > 0;
+    }
+
     // Notification CRUD methods
     public boolean insertNotification(String serverId, String title, String message, String type, String createdAt, String payload) {
         SQLiteDatabase db = this.getWritableDatabase();

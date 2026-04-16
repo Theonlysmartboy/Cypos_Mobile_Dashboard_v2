@@ -65,7 +65,8 @@ public class LockActivity extends AppCompatActivity {
                         if (index < pins.length - 1) {
                             pins[index + 1].requestFocus();
                         } else {
-                            validatePin();
+                            // Delay slightly to let the last dot appear
+                            pins[index].postDelayed(() -> validatePin(), 100);
                         }
                     }
                 }

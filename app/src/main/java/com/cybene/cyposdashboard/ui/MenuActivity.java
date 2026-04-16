@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,9 +29,10 @@ import com.google.android.material.snackbar.Snackbar;
 public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallbacks {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private static final int count= Integer.parseInt(SharedPrefs.getInstance().getString("notification_content"));
     private Db myDb;
     TextView name, email;
+    private long lastInteractionTime;
+    private static final String PREF_IDLE_TIMEOUT = "idle_timeout"; // in minutes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,26 +60,17 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_sales,
                 R.id.nav_purchase, R.id.nav_inventory, R.id.nav_accounts, R.id.nav_branch,
-                R.id.nav_customer, R.id.nav_supplier, R.id.nav_profile, R.id.nav_settings,
-                R.id.nav_logout)
+                R.id.nav_customer, R.id.nav_supplier, R.id.nav_notifications, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_logout) {
-                SharedPrefs.getInstance().saveBoolean("isLoggedIn", false);
-                myDb.deleteUser();
-                startActivity(new Intent(this, LoginActivity.class));
-                finish();
-                return true;
-            } else if (id == R.id.nav_settings) {
-                Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (id == R.id.nav_profile) {
-                startActivity(new Intent(this, PasswordResetActivity.class));
+                logout();
                 return true;
             } else {
                 boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
@@ -89,6 +80,42 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
                 return handled;
             }
         });
+
+        lastInteractionTime = System.currentTimeMillis();
+    }
+
+    private void logout() {
+        SharedPrefs.getInstance().saveBoolean("isLoggedIn", false);
+        myDb.deleteUser();
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        lastInteractionTime = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkIdleTime();
+    }
+
+    private void checkIdleTime() {
+        int timeoutMinutes = SharedPrefs.getInstance().getInt(PREF_IDLE_TIMEOUT, 0);
+        if (timeoutMinutes > 0) {
+            long idleMillis = System.currentTimeMillis() - lastInteractionTime;
+            if (idleMillis > (long) timeoutMinutes * 60 * 1000) {
+                // Lock the app
+                Intent intent = new Intent(this, com.cybene.cyposdashboard.ui.auth.LockActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        }
     }
 
     @Override
@@ -119,7 +146,8 @@ public class MenuActivity extends AppCompatActivity implements AddOrRemoveCallba
             finish();
             return true;
         }else if(item.getItemId() == R.id.action_settings){
-            Toast.makeText(this,"Module not yet available",Toast.LENGTH_LONG).show();
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            navController.navigate(R.id.nav_settings);
             return true;
         }else{
             return super.onOptionsItemSelected(item);
