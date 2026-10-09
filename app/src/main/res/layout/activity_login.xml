@@ -40,7 +40,6 @@
             android:autofillHints="@string/user_name"
             android:inputType="textAutoComplete|textAutoCorrect|textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
-
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +64,6 @@
                 android:autofillHints="@string/password"
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
-
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -90,8 +88,7 @@
         app:layout_constraintBottom_toTopOf="@+id/sign_up"
         android:background="@drawable/rounded_button"
         android:textColor="@color/white"
-        android:text="@string/sign_in"
-        />
+        android:text="@string/sign_in" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -104,7 +101,7 @@
         android:textColor="@color/colorPrimary"
         android:layout_margin="@dimen/margin_sm"
         android:textSize="20sp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,5 +113,5 @@
         android:layout_margin="@dimen/margin_sm"
         android:textColor="@color/colorPrimary"
         android:text="@string/forgot_password"
-        android:textSize="20sp"   />
+        android:textSize="20sp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
