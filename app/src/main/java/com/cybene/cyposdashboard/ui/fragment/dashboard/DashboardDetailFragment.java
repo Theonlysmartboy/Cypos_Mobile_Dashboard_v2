@@ -45,14 +45,12 @@ public class DashboardDetailFragment extends Fragment {
     private static final String ARG_FROM = "fromDate";
     private static final String ARG_TO = "toDate";
     private static final String ARG_BRANCH = "branch";
-
     private String title;
     private String fromDate;
     private String toDate;
     private String branch;
     private Calendar calendar;
     private EditText fromDateEditText, toDateEditText;
-    private Button refreshButton;
     private RecyclerView recyclerView;
     private DashboardDetailAdapter adapter;
 
@@ -91,12 +89,13 @@ public class DashboardDetailFragment extends Fragment {
         setToolbarTitle(title);
         fromDateEditText.setOnClickListener(v -> showDatePicker(fromDateEditText));
         toDateEditText.setOnClickListener(v -> showDatePicker(toDateEditText));
-        refreshButton = root.findViewById(R.id.refreshButton);
+        Button refreshButton = root.findViewById(R.id.refreshButton);
         refreshButton.setOnClickListener(v -> {
             fromDate = fromDateEditText.getText().toString().trim();
             toDate = toDateEditText.getText().toString().trim();
             if (fromDate.isEmpty() || toDate.isEmpty()) {
-                Toast.makeText(requireContext(), "Please select both From and To dates", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Please select both From and To dates",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
             fetchDetailData(recyclerView, title, fromDate, toDate, branch);
@@ -146,7 +145,8 @@ public class DashboardDetailFragment extends Fragment {
                     recyclerView.setAdapter(adapter);
                 } catch (JSONException e) {
                     Log.e("Dashboard", "Error parsing response", e);
-                    Toast.makeText(requireActivity(), "Error parsing data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), "Error parsing data",
+                            Toast.LENGTH_SHORT).show();
                 }
             },
             error -> {
@@ -166,6 +166,7 @@ public class DashboardDetailFragment extends Fragment {
         request.setRetryPolicy(new DefaultRetryPolicy(25000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Log.d("fetchDetailData: ", "Request: " + request);
         queue.add(request);
     }
     private List<DashboardDetailItem> parseDashboardResponse(JSONObject response) throws JSONException {
@@ -189,7 +190,8 @@ public class DashboardDetailFragment extends Fragment {
                 list.add(new DashboardDetailItem(itemTitle, itemAmount, itemColor));
             }
         } else if (response.has("error")) {
-            Toast.makeText(requireActivity(), response.getString("error_msg"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), response.getString("error_msg"),
+                    Toast.LENGTH_SHORT).show();
         }
         return list;
     }
